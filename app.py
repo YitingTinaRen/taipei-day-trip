@@ -41,7 +41,7 @@ def list_dict2value_list(lsts, key):
 def urls(list):
 	# put image urls into attraction list
 	for i in range(len(list)):
-		sql="select images from imgURL where id= %s"
+		sql="select images from imgURL where id= %s and (lower(images) like '%jpg' or lower(images) like '%jpeg' or lower(images) like '%png')"
 		val=(list[i]["id"],)
 		imgs=checkData(sql, val)
 		imgs=list_dict2value_list(imgs, "images")
@@ -158,4 +158,4 @@ mydb=mysql.connector.connect(
 	**dbconfig
 )
 mydb.close()
-app.run(port=3000, debug=True)
+app.run(host='0.0.0.0', port=3000)
