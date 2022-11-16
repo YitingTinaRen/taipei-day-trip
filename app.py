@@ -42,6 +42,7 @@ def urls(list):
 	# put image urls into attraction list
 	for i in range(len(list)):
 		sql="select images from imgURL where id= %s and (lower(images) like '%jpg' or lower(images) like '%jpeg' or lower(images) like '%png')"
+		# sql="select images from imgURL where id= %s"
 		val=(list[i]["id"],)
 		imgs=checkData(sql, val)
 		imgs=list_dict2value_list(imgs, "images")
@@ -124,6 +125,7 @@ def api_attractionId(attractionId):
 		
 	# put image urls into attraction list
 	attractions= urls(attractions)
+	attractions=dict(Data=attractions[0])
 
 	return jsonify(attractions), 200
 
