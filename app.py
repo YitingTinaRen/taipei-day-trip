@@ -26,9 +26,9 @@ def split_chunks(list, itemNo_chunk):
 	final={}
 	for n in range(len(result)):
 		if n == len(result)-1:
-			final[n]=dict(Data=result[n], nextPage=None)
+			final[n]=dict(data=result[n], nextPage=None)
 		else:
-			final[n]=dict(Data=result[n], nextPage=n+1)
+			final[n]=dict(data=result[n], nextPage=n+1)
 	
 	# select_img="select images from imgURL where id =%s"
 	# val=(result[n])
@@ -125,7 +125,7 @@ def api_attractionId(attractionId):
 		
 	# put image urls into attraction list
 	attractions= urls(attractions)
-	attractions=dict(Data=attractions[0])
+	attractions=dict(data=attractions[0])
 
 	return jsonify(attractions), 200
 
