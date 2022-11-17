@@ -64,10 +64,10 @@ def api_attraction():
 			"where (category= %s or name like %s) "\
 			"order by id asc "\
 			"limit %s, %s"
-		val=(keyword, ambig_keyword,page*NumInOnePage, NumInOnePage,)
+		val=(keyword, ambig_keyword, page*NumInOnePage, NumInOnePage+1,) # request 1 more data than the requested to see if we will have next page
 	else: # There is no keyword
 		sql="select id, name, category, description, address, transport, mrt, lat, lng from attractions order by id asc limit %s, %s "
-		val=(page*NumInOnePage, NumInOnePage,)
+		val=(page*NumInOnePage, NumInOnePage+1,)
 	
 	# Search in mysql
 	try:
@@ -80,13 +80,13 @@ def api_attraction():
 		
 	# put image urls into attraction list
 	attractions= urls(attractions)
-
+	print(len(attractions))
 	# Return results
-	if len(attractions) == NumInOnePage:
-		return jsonify(dict(data=attractions, nextPage=page+1)), 200
+	if len(attractions) == NumInOnePage+1: # check if there will be at least one more data in the next page
+		return jsonify(dict(data=attractions[0:NumInOnePage], nextPage=page+1)), 200
 		
 	else:
-		return jsonify(dict(data=attractions, nextPage=None)),200
+		return jsonify(dict(data=attractions[0:NumInOnePage], nextPage=None)),200
 
 
 @app.route("/api/attraction/<attractionId>")
