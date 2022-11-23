@@ -1,11 +1,13 @@
 import mysql.connector
 from flask import *
+from flask_cors import CORS
 
 app=Flask(__name__)
 app.config["JSON_AS_ASCII"]=False
 app.config["TEMPLATES_AUTO_RELOAD"]=True
 app.config['JSONIFY_MIMETYPE'] ="application/json;charset=utf-8"
 app.config["JSONIFY_PRETTYPRINT_REGULAR"]="True"
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 
 def checkData(sql, val=()):

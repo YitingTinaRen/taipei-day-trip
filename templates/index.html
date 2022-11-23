@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta charset="utf-8"/>
+        <title>Index</title>
+        <link rel="stylesheet" type="text/css" href="index.css"/>
+    </head>
+    <body>
+
+        <div class="topnavground">
+            <div class="topnavframe">
+                <div class="left">
+                    <a class="left">台北一日遊</a>
+                </div>
+                <div class="right">
+                    <div class="RightItem1">
+                        預定行程
+                    </div>
+                    <div class="RightItem2">
+                        登入/註冊
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="WelcomeBackground">
+            <div class="Welcome">
+                <div class="slogan">
+                    
+                    <div style="top:10px;left:10px;height:41px;font-size: 28px;text-shadow:0px 0px 30px #AABBCC;"  class="sloganText">輕鬆享受台北一日悠閒</div>
+                    <div style="height:22px;font-size:16px;" class="sloganText">探索每個角落，體驗城市的深度旅遊行程</div>
+                    
+                    <div class="wrap">
+                        <div class="search">
+                            <input class="search-bar" type="text" name="keyword" id="keyword" placeholder="輸入景點名稱查詢">
+                            <button class="search-btn" onclick="searchKeyword();"><img style="height:30px;width:30px;top:8px;left:15px;" src="../imgs/search_icon.png"></button>
+                        </div>
+                    </div>
+
+                    <div id="category_list"></div>
+                    
+                </div>
+            </div>
+        </div>
+
+        <div class="MainBackground">
+            <div class="mainframe"></div>
+        </div>
+        <div class="footer">
+            <div class="footer_box">
+                    COPYRIGHT © 2021 台北一日遊
+
+            </div>
+        </div>
+
+
+        <script>
+            var nextPage=0;
+            var keyword="";
+            var list;
+            
+            
+            var url="http://52.38.29:3000/";
+            fetch([url+"api/attractions"]).then(function(response){
+                return response.json();
+            }).then(function(data){
+                //已經取得資料
+    
+                
+                //把資料呈現到畫面上
+                LoadMoreData();
+                if(data.nextPage && (document.querySelector(".mainframe").clientHeight+document.querySelector(".WelcomeBackground").clientHeight+document.querySelector(".topnavground").clientHeight)<=window.innerHeight){
+                    nextPage=data.nextPage;
+                    LoadMoreData();
+                }
+            });
+
+            //     let container=document.querySelectorAll(containerClass);
+            //     for(let i=0; i<container.length;i++){
+            //         let imgDiv=document.createElement('div');
+            //         let OverlaptextDiv=document.createElement('div');
+            //         let BottomtextDiv=document.createElement('div');
+            //         let BottomtextleftDiv=document.createElement('div');
+            //         let BottomtextrightDiv=document.createElement('div');
+            //         let img=document.createElement('img');
+            //         let textSpan=document.createElement('span');
+            //         img.src = data.data[i].images[0];
+                    
+            //         // set attributes
+            //         img.setAttribute("class","pic");
+            //         imgDiv.setAttribute("class","block_pic");
+            //         OverlaptextDiv.setAttribute("class","block_text_overlap");
+            //         BottomtextDiv.setAttribute("class","block_text_bottom");
+            //         BottomtextleftDiv.setAttribute("class","block_text_bottom_text_L");
+            //         BottomtextrightDiv.setAttribute("class","block_text_bottom_text_R");
+            //         textSpan.setAttribute("class","text_span");
+
+            //         textSpan.appendChild(document.createTextNode(data.data[i].name));
+            //         OverlaptextDiv.appendChild(textSpan);
+
+            //         let textLeft=document.createTextNode(data.data[i].mrt)
+            //         let textRight=document.createTextNode(data.data[i].category)
+
+            //         imgDiv.appendChild(img);
+            //         container[i].appendChild(imgDiv);
+            //         container[i].appendChild(OverlaptextDiv);
+            //         BottomtextleftDiv.appendChild(textLeft);
+            //         BottomtextrightDiv.appendChild(textRight);
+            //         BottomtextDiv.appendChild(BottomtextleftDiv);
+            //         BottomtextDiv.appendChild(BottomtextrightDiv);
+            //         container[i].appendChild(BottomtextDiv); 
+            //     }
+
+            //     if (window.innerHeight>=1200){
+            //             LoadMoreData();
+            //     }
+                
+            // }
+            function createBlock(Count, data){
+                let container=document.createElement('div');
+                let imgDiv=document.createElement('div');
+                let OverlaptextDiv=document.createElement('div');
+                let BottomtextDiv=document.createElement('div');
+                let BottomtextleftDiv=document.createElement('div');
+                let BottomtextrightDiv=document.createElement('div');
+                let img=document.createElement('img');
+                let textSpan=document.createElement('span');
+                img.src = data.data[Count].images[0];
+
+                // set attributes
+                container.setAttribute("class","block");
+                img.setAttribute("class","pic");
+                imgDiv.setAttribute("class","block_pic");
+                OverlaptextDiv.setAttribute("class","block_text_overlap");
+                BottomtextDiv.setAttribute("class","block_text_bottom");
+                BottomtextleftDiv.setAttribute("class","block_text_bottom_text_L");
+                BottomtextrightDiv.setAttribute("class","block_text_bottom_text_R");
+                textSpan.setAttribute("class","text_span");
+
+                textSpan.appendChild(document.createTextNode(data.data[Count].name));
+                OverlaptextDiv.appendChild(textSpan);
+
+                let textLeft=document.createTextNode(data.data[Count].mrt)
+                let textRight=document.createTextNode(data.data[Count].category)
+
+                imgDiv.appendChild(img);
+                container.appendChild(imgDiv);
+                container.appendChild(OverlaptextDiv);
+                BottomtextleftDiv.appendChild(textLeft);
+                BottomtextrightDiv.appendChild(textRight);
+                BottomtextDiv.appendChild(BottomtextleftDiv);
+                BottomtextDiv.appendChild(BottomtextrightDiv);
+                container.appendChild(BottomtextDiv);
+
+                Count++;
+                return {'Count':Count, 'container':container}
+            }
+            function NoMoreData(GrandParentNode,ParentNode){
+                let buttonNode=document.querySelector(".button");
+                buttonNode.textContent="No more data";
+                GrandParentNode.insertBefore(ParentNode,buttonNode);
+                return;
+            }
+            function LoadMoreData(){
+                let mainframe=document.querySelector(".mainframe");
+
+                if (nextPage===null){return;}
+                fetch([url+"api/attractions?page="+nextPage+"&keyword="+keyword]).then(function(response){
+                    return response.json();
+                }).then(function (data){
+                    if(data.error){
+                        let message=document.createElement('div');
+                        message.appendChild(document.createTextNode(data.message));
+                        mainframe.appendChild(message);
+                        return;
+                    }
+                    nextPage=data.nextPage;
+                    dataAmount=data.data.length;
+                    for (let i=0;i<3;i++){
+                        let Content=document.createElement('div');
+                        let blank1=document.createElement('div');
+                        let blank2=document.createElement('div');
+                        let blankDesk=document.createElement('div');
+                        let funcOutput={};
+                        
+                        
+                        Content.setAttribute("class","Content");
+                        blank1.setAttribute("class","blank");
+                        blank2.setAttribute("class","blank");
+                        blankDesk.setAttribute("class","blank_desk");
+                        
+                        createContent(Content, blank1, blank2, blankDesk, mainframe,4*i, dataAmount, data)
+
+                    }
+                })
+            }
+            function createContent(Content, blank1, blank2, blankDesk, mainframe, Count, dataAmount, data){
+                if (!nextPage && Count>=dataAmount){/*NoMoreData(mainframe,Content);*/return;}
+                funcOutput=createBlock(Count, data);
+                Count=funcOutput.Count;
+                Content.appendChild(funcOutput.container);
+                Content.appendChild(blank1);
+
+                if (!nextPage && Count>=dataAmount){
+                    Content.appendChild(funcOutput.container);
+                    mainframe.appendChild(Content);
+                    return;
+                }
+                funcOutput=createBlock(Count,data);
+                Count=funcOutput.Count;
+                Content.appendChild(funcOutput.container);
+                Content.appendChild(blankDesk);
+                if (!nextPage && Count>=dataAmount){
+                    Content.appendChild(funcOutput.container);
+                    mainframe.appendChild(Content);
+                    return;
+                }
+                funcOutput=createBlock(Count, data);
+                Count=funcOutput.Count;
+                Content.appendChild(funcOutput.container);
+                Content.appendChild(blank2);
+                if (!nextPage && Count>=dataAmount){
+                    Content.appendChild(funcOutput.container);
+                    mainframe.appendChild(Content);
+                    return;
+                }
+                funcOutput=createBlock(Count, data);
+                Count=funcOutput.Count;
+                Content.appendChild(funcOutput.container);
+                mainframe.appendChild(Content);
+            }
+            
+            // scroll event handling
+            var didScroll = false;
+            var handleScroll = function() {
+                if ( didScroll ) {
+                    didScroll = false;
+                    // Check your page position and do stuff
+                    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight){
+                        LoadMoreData();
+                    }
+                }
+            };
+            window.onscroll=function() {
+                didScroll = true;
+            };
+            setInterval(handleScroll, 150);
+
+            function removeAllChildNodes(parent) {
+                while (parent.firstChild) {
+                    parent.removeChild(parent.firstChild);
+                }
+            }
+            
+            // Keyword search
+            function searchKeyword(){
+                elmt=document.querySelector(".mainframe");
+                removeAllChildNodes(elmt);
+                nextPage=0;
+                keyword=document.getElementById("keyword").value;
+                LoadMoreData();
+            }
+            
+            window.addEventListener("load", () => {
+                // (A) GET DATA FROM SERVER VIA AJAX FETCH
+                fetch(url+"api/categories")
+                .then((res) => res.json())
+                .then((data) => {
+                    // (B) GET HTML ELEMENTS
+                    let filter = document.getElementById("keyword"), // search box
+                    list_wrapper = document.getElementById("category_list"); // list item wrapper
+                    
+                    // (C) DRAW HTML LIST
+                    let cat_count=0;
+                    for (let i of data.data) {
+                        let li = document.createElement("div");
+                        let cat_text=document.createTextNode(i);
+                        li.setAttribute("id",["cat-"+cat_count])
+                        li.appendChild(cat_text);
+                        list_wrapper.appendChild(li);
+                        cat_count++;
+                    }
+
+                    list_wrapper.style.visibility = "hidden"; // hide
+                    filter.addEventListener('click',function(e){
+                        list_wrapper.style.visibility="visible"; //show
+                    },false)
+                
+                    // (D) SAME AS BEFORE
+                    list = document.querySelectorAll("#category_list div");
+                    filter.onkeyup = () => {
+                        // (D1) GET CURRENT SEARCH TERM
+                        let search = filter.value.toLowerCase();
+                    
+                        // (D2) LOOP THROUGH LIST ITEMS - ONLY SHOW THOSE THAT MATCH SEARCH
+                        for (let i of list) {
+                            let item = i.innerHTML.toLowerCase();
+                            if (item.indexOf(search) == -1) { i.classList.add("hide"); }
+                            else { i.classList.remove("hide"); }
+                        }
+                    };
+                    
+                    // fill in search bar when selected.
+                    const catPressed = e => {
+                        targetId=e.target.id;
+                        elmt=document.getElementById(targetId);
+                        filter.value= elmt.textContent;
+                        filter.style.color= "#000000";
+                        list_wrapper.style.visibility="hidden";
+                        
+                    }
+                    for (let i of list) {
+                        i.addEventListener("click", catPressed);
+                    }
+
+                    document.addEventListener('click', function(e) {
+                        e = e || window.event;
+                        var target = e.target || e.srcElement;
+                        if(target.id != "keyword"){
+                            list_wrapper.style.visibility="hidden";
+                        }
+                    }, false);
+
+
+                });
+            });
+            
+            
+        
+        </script>
+    </body>
+</html>
