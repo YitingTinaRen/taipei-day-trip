@@ -105,7 +105,7 @@ body{
     height:100%;
     max-width: 1920px;
     width: 100%;
-    background: url('../imgs/WelcomeImage.png') no-repeat left top;
+    background: url('/static/imgs/WelcomeImage.png') no-repeat left top;
     background-size: 1920px 480px;
     position: relative;
 }
