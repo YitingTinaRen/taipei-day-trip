@@ -6,6 +6,9 @@ body{
     /* Additional Color/White */
     background: #FFFFFF;
     height:54px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 
     display:flex; /*let items of next level display horizontally*/
     align-items: center;
@@ -96,6 +99,7 @@ body{
     align-items: center;
     height: 320px;
     width: 100%;
+    
 }
 .Welcome{
     /* Set image size*/

@@ -50,7 +50,6 @@
         <div class="footer">
             <div class="footer_box">
                     COPYRIGHT © 2021 台北一日遊
-
             </div>
         </div>
 
@@ -59,6 +58,7 @@
             var nextPage=0;
             var keyword="";
             var list;
+            var isLoading=false;
             
             
             
@@ -73,7 +73,7 @@
                 //把資料呈現到畫面上
                 LoadMoreData();
 
-                var myTimeout = setTimeout(SecondLoad, 600);
+                var myTimeout = setTimeout(SecondLoad, 800);
         
                 function SecondLoad() {
                     if(nextPage && (document.querySelector(".mainframe").clientHeight+document.querySelector(".WelcomeBackground").clientHeight+document.querySelector(".topnavground").clientHeight)<=window.innerHeight){
@@ -81,6 +81,7 @@
                         clearTimeout(myTimeout);
                         }
                 }
+
             });
 
             //     let container=document.querySelectorAll(containerClass);
@@ -170,12 +171,13 @@
                 return;
             }
             function LoadMoreData(){
-                
+                isLoading=true;
                 let mainframe=document.querySelector(".mainframe");
                 if (nextPage===null){return;}
                 fetch([url+"api/attractions?page="+nextPage+"&keyword="+keyword]).then(function(response){
                     return response.json();
                 }).then(function (data){
+                    isLoading=false;
                     if(data.error){
                         let message=document.createElement('div');
                         message.appendChild(document.createTextNode(data.message));
@@ -244,19 +246,31 @@
             
             // scroll event handling
             var didScroll = false;
-            var handleScroll = function() {
-                if ( didScroll ) {
-                    didScroll = false;
-                    // Check your page position and do stuff
-                    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight){
-                        LoadMoreData();
-                    }
-                }
-            };
+            // var handleScroll = function() {
+            //     if ( didScroll ) {
+            //         didScroll = false;
+            //         footer=document.querySelector(".footer");
+            //         footer.style.visibility="hidden";
+            //         // Check your page position and do stuff
+            //         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading){
+            //             LoadMoreData();
+            //         }
+            //     }
+            // };
             window.onscroll=function() {
                 didScroll = true;
+
+                if ( didScroll ) {
+                didScroll = false;
+                footer=document.querySelector(".footer");
+                footer.style.visibility="hidden";
+                // Check your page position and do stuff
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading){
+                    LoadMoreData();
+                }
+                }
             };
-            setInterval(handleScroll, 150);
+            // setInterval(handleScroll, 250);
 
             function removeAllChildNodes(parent) {
                 while (parent.firstChild) {
@@ -280,6 +294,9 @@
                         clearTimeout(myTimeout);
                         }
                 }
+
+                footer=document.querySelector(".footer");
+                footer.style.visibility="visible";
             }
             
             // (A) GET DATA FROM SERVER VIA AJAX FETCH
