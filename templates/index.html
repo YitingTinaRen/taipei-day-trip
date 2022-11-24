@@ -79,8 +79,13 @@
                     if(nextPage && (document.querySelector(".mainframe").clientHeight+document.querySelector(".WelcomeBackground").clientHeight+document.querySelector(".topnavground").clientHeight)<=window.innerHeight){
                         LoadMoreData();
                         clearTimeout(myTimeout);
-                        }
+                    
+                    }
+                    
+                    footer=document.querySelector(".footer");
+                    footer.style.visibility="visible";
                 }
+                
 
             });
 
@@ -262,11 +267,10 @@
 
                 if ( didScroll ) {
                 didScroll = false;
-                footer=document.querySelector(".footer");
-                footer.style.visibility="hidden";
                 // Check your page position and do stuff
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading){
-                    LoadMoreData();
+                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight){
+                    if(!isLoading){LoadMoreData();}
+                    
                 }
                 }
             };
@@ -294,9 +298,6 @@
                         clearTimeout(myTimeout);
                         }
                 }
-
-                footer=document.querySelector(".footer");
-                footer.style.visibility="visible";
             }
             
             // (A) GET DATA FROM SERVER VIA AJAX FETCH

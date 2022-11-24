@@ -1,6 +1,8 @@
-body{
+html,body{
+    height:100%;
     margin: 0;
 }
+
 /* Add a black background color to the top navigation */
 .topnavground {
     /* Additional Color/White */
@@ -99,7 +101,6 @@ body{
     align-items: center;
     height: 320px;
     width: 100%;
-    
 }
 .Welcome{
     /* Set image size*/
@@ -349,11 +350,10 @@ body{
     display:flex;
     align-items: center;
     justify-content: center;
-    position: fixed;
-    bottom: 0;
     width: 100%;
     height: 104px;   /* Height of the footer */
     background: #757575;
+    visibility: hidden;
  }
  .footer_box{
     flex:none;
@@ -425,11 +425,5 @@ body{
     #category_list {
         width:322px;
         height:162px;
-    }
-    .footer{
-        display:none;
-    }
-    .footer_box{
-        display:none;
     }
 }
