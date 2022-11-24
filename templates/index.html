@@ -61,7 +61,9 @@
             var list;
             
             
+            
             var url="http://52.37.59.29:3000/";
+            
             fetch([url+"api/attractions"]).then(function(response){
                 return response.json();
             }).then(function(data){
@@ -70,9 +72,14 @@
                 
                 //把資料呈現到畫面上
                 LoadMoreData();
-                if(data.nextPage && (document.querySelector(".mainframe").clientHeight+document.querySelector(".WelcomeBackground").clientHeight+document.querySelector(".topnavground").clientHeight)<=window.innerHeight){
-                    nextPage=data.nextPage;
-                    LoadMoreData();
+
+                var myTimeout = setTimeout(SecondLoad, 600);
+        
+                function SecondLoad() {
+                    if(nextPage && (document.querySelector(".mainframe").clientHeight+document.querySelector(".WelcomeBackground").clientHeight+document.querySelector(".topnavground").clientHeight)<=window.innerHeight){
+                        LoadMoreData();
+                        clearTimeout(myTimeout);
+                        }
                 }
             });
 
@@ -163,8 +170,8 @@
                 return;
             }
             function LoadMoreData(){
+                
                 let mainframe=document.querySelector(".mainframe");
-
                 if (nextPage===null){return;}
                 fetch([url+"api/attractions?page="+nextPage+"&keyword="+keyword]).then(function(response){
                     return response.json();
@@ -191,10 +198,14 @@
                         blankDesk.setAttribute("class","blank_desk");
                         
                         createContent(Content, blank1, blank2, blankDesk, mainframe,4*i, dataAmount, data)
-
+                        
                     }
+                    return;
                 })
+                
             }
+            
+
             function createContent(Content, blank1, blank2, blankDesk, mainframe, Count, dataAmount, data){
                 if (!nextPage && Count>=dataAmount){/*NoMoreData(mainframe,Content);*/return;}
                 funcOutput=createBlock(Count, data);
@@ -260,71 +271,78 @@
                 nextPage=0;
                 keyword=document.getElementById("keyword").value;
                 LoadMoreData();
+
+                var myTimeout = setTimeout(SecondLoad, 600);
+        
+                function SecondLoad() {
+                    if(nextPage && (document.querySelector(".mainframe").clientHeight+document.querySelector(".WelcomeBackground").clientHeight+document.querySelector(".topnavground").clientHeight)<=window.innerHeight){
+                        LoadMoreData();
+                        clearTimeout(myTimeout);
+                        }
+                }
             }
             
-            window.addEventListener("load", () => {
-                // (A) GET DATA FROM SERVER VIA AJAX FETCH
-                fetch(url+"api/categories")
-                .then((res) => res.json())
-                .then((data) => {
-                    // (B) GET HTML ELEMENTS
-                    let filter = document.getElementById("keyword"), // search box
-                    list_wrapper = document.getElementById("category_list"); // list item wrapper
-                    
-                    // (C) DRAW HTML LIST
-                    let cat_count=0;
-                    for (let i of data.data) {
-                        let li = document.createElement("div");
-                        let cat_text=document.createTextNode(i);
-                        li.setAttribute("id",["cat-"+cat_count])
-                        li.appendChild(cat_text);
-                        list_wrapper.appendChild(li);
-                        cat_count++;
-                    }
-
-                    list_wrapper.style.visibility = "hidden"; // hide
-                    filter.addEventListener('click',function(e){
-                        list_wrapper.style.visibility="visible"; //show
-                    },false)
+            // (A) GET DATA FROM SERVER VIA AJAX FETCH
+            fetch(url+"api/categories")
+            .then((res) => res.json())
+            .then((data) => {
+                // (B) GET HTML ELEMENTS
+                let filter = document.getElementById("keyword"), // search box
+                list_wrapper = document.getElementById("category_list"); // list item wrapper
                 
-                    // (D) SAME AS BEFORE
-                    list = document.querySelectorAll("#category_list div");
-                    filter.onkeyup = () => {
-                        // (D1) GET CURRENT SEARCH TERM
-                        let search = filter.value.toLowerCase();
-                    
-                        // (D2) LOOP THROUGH LIST ITEMS - ONLY SHOW THOSE THAT MATCH SEARCH
-                        for (let i of list) {
-                            let item = i.innerHTML.toLowerCase();
-                            if (item.indexOf(search) == -1) { i.classList.add("hide"); }
-                            else { i.classList.remove("hide"); }
-                        }
-                    };
-                    
-                    // fill in search bar when selected.
-                    const catPressed = e => {
-                        targetId=e.target.id;
-                        elmt=document.getElementById(targetId);
-                        filter.value= elmt.textContent;
-                        filter.style.color= "#000000";
-                        list_wrapper.style.visibility="hidden";
-                        
-                    }
-                    for (let i of list) {
-                        i.addEventListener("click", catPressed);
-                    }
+                // (C) DRAW HTML LIST
+                let cat_count=0;
+                for (let i of data.data) {
+                    let li = document.createElement("div");
+                    let cat_text=document.createTextNode(i);
+                    li.setAttribute("id",["cat-"+cat_count])
+                    li.appendChild(cat_text);
+                    list_wrapper.appendChild(li);
+                    cat_count++;
+                }
 
-                    document.addEventListener('click', function(e) {
-                        e = e || window.event;
-                        var target = e.target || e.srcElement;
-                        if(target.id != "keyword"){
-                            list_wrapper.style.visibility="hidden";
-                        }
-                    }, false);
+                list_wrapper.style.visibility = "hidden"; // hide
+                filter.addEventListener('click',function(e){
+                    list_wrapper.style.visibility="visible"; //show
+                },false)
+            
+                // (D) SAME AS BEFORE
+                list = document.querySelectorAll("#category_list div");
+                filter.onkeyup = () => {
+                    // (D1) GET CURRENT SEARCH TERM
+                    let search = filter.value.toLowerCase();
+                
+                    // (D2) LOOP THROUGH LIST ITEMS - ONLY SHOW THOSE THAT MATCH SEARCH
+                    for (let i of list) {
+                        let item = i.innerHTML.toLowerCase();
+                        if (item.indexOf(search) == -1) { i.classList.add("hide"); }
+                        else { i.classList.remove("hide"); }
+                    }
+                };
+                
+                // fill in search bar when selected.
+                const catPressed = e => {
+                    targetId=e.target.id;
+                    elmt=document.getElementById(targetId);
+                    filter.value= elmt.textContent;
+                    filter.style.color= "#000000";
+                    list_wrapper.style.visibility="hidden";
+                    
+                }
+                for (let i of list) {
+                    i.addEventListener("click", catPressed);
+                }
+
+                document.addEventListener('click', function(e) {
+                    e = e || window.event;
+                    var target = e.target || e.srcElement;
+                    if(target.id != "keyword"){
+                        list_wrapper.style.visibility="hidden";
+                    }
+                }, false);
 
 
                 });
-            });
             
             
         
