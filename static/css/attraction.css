@@ -350,14 +350,16 @@ input[type="date"]:valid::before {
     font-size: 16px;
 }
 
-
+input[type="radio"]{
+    accent-color: #448899;
+}
  
 
 .btn{
     background: #448899;
     border-radius: 5px;
+    border: 0px;
     color: #FFFFFF;
-    /* padding: 10px 20px; */
     width: 154px;
     height: 36px;
 
