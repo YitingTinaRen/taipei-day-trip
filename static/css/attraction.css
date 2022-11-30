@@ -1,0 +1,474 @@
+html,body{
+    height:100%;
+    margin: 0;
+}
+
+/* Add a black background color to the top navigation */
+.topnavground {
+/* Additional Color/White */
+background: #FFFFFF;
+height:54px;
+position: sticky;
+top: 0;
+z-index: 10;
+
+display:flex; /*let items of next level display horizontally*/
+align-items: center;
+justify-content: center;
+}
+
+.topnavframe {
+flex:none;
+display:flex;
+align-items: center;
+max-width: 1200px;
+width: 100%;
+height: 34px;
+position: relative;
+}
+.left{
+    flex:none;
+    justify-content: flex-start;
+    position: absolute;
+    width: 150px;
+    height: 34px;
+    left: 0px;
+    
+
+    /* Header 2 - Bold 30(34) */
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 34px;
+    /* identical to box height, or 113% */
+
+    /* Primary Color/Cyan 70 */
+    color: #448899;
+}
+.right{
+    /* Auto layout */
+    display: flex;
+    flex: none;
+    justify-content: flex-end;
+
+    position: absolute;
+    width: 175px;
+    height: 34px;
+    right: 0px;
+}
+.RightItem1{
+    flex:none;
+    text-align: center;
+    display:blcok;
+
+    height: 14px;
+    padding: 10px;
+
+    /* Body - Med 16(13.3) */
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 13px;
+    /* identical to box height, or 83% */
+
+    /* Secondary Color/Gray 70 */
+    color: #666666;
+}
+.RightItem2{
+    flex:none;
+    text-align: center;
+    display:blcok;
+
+    height: 14px;
+    padding: 10px;
+
+    /* Body - Med 16(13.3) */
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 13px;
+    /* identical to box height, or 83% */
+
+    /* Secondary Color/Gray 70 */
+    color: #666666;
+}
+.Separator{
+    flex:none;
+    width:100%;
+    height:0;
+    border: 1px solid #E8E8E8;
+    margin:0px;
+}
+
+.MainBackground{
+    display:flex;
+    justify-content: center;
+}
+.mainframe{
+    display: flex;
+    justify-content: center;
+    flex:none;
+    flex-wrap: wrap;
+    max-width:1200px;
+    margin-top: 25px;
+    width:100%;
+}
+
+.footer {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 104px;   /* Height of the footer */
+    background: #757575;
+    visibility: hidden;
+
+ }
+ .footer_box{
+    flex:none;
+    width: 234px;
+    height: 24px;   /* Height of the footer */
+    top:5px;
+    left:0px;
+    padding:0px;
+    
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    color: #FFFFFF;
+    text-align: left;
+    vertical-align: middle;
+    white-space:nowrap;
+ }
+ 
+.section{
+    flex:none;
+    width:100%;
+    /* height:400px; */
+    margin-top: 40px;
+    margin-bottom: 40px;
+    padding-left: 15px;
+    padding-right: 15px;
+
+    display:flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+* {box-sizing:border-box}
+/* Slideshow container */
+.slideshow-container {
+    flex:none;
+    max-width: 540px;
+    width:45%;
+    position: relative;
+    margin-right: 15px;
+
+}
+  
+/* Hide the images by default */
+.mySlides {
+    display: none;
+    width:100%;
+}
+
+/* Next & previous buttons */
+.prev {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: 36px;
+    height:36px;
+    left: 1.85%;
+    color: white;
+    user-select: none;
+    opacity: 0.75;
+    
+}
+
+/* Position the "next button" to the right */
+.next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: 36px;
+    height:36px;
+    right:1.85%;
+    color: white;
+    user-select: none;
+    opacity: 0.75;
+}
+
+/* The dots/bullets/indicators */
+.dot_container{
+    position:absolute;
+    bottom:13px;
+    left:0;
+    right:0;
+    margin:auto;
+}
+.dot {
+    cursor: pointer;
+    height: 12px;
+    width: 12px;
+    margin: 0 6px;
+    background: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    border-radius: 50%;
+    display: inline-block;
+    transition: background-color 0.6s ease;
+}
+
+.active, .dot:hover {
+    background: #000000;
+}
+
+/* Fading animation */
+.fade {
+    animation-name: fade;
+    animation-duration: 1s;
+}
+
+@keyframes fade {
+    from {opacity: .4} 
+    to {opacity: 1}
+}
+
+.profile{
+    flex:none;
+    max-width: 600px;
+    width:50%;
+    position: relative;
+    margin-left: 15px;
+
+    display:flex;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+
+}
+
+.name{
+    flex:none;
+    width:100%;
+    height:33px;
+    margin-bottom: 15px;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 24px;
+    color: #666666;
+}
+.profile_text{
+    flex:none;
+    width:100%;
+    height: 22px;
+    margin-bottom:20px;
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    color: #666666;
+}
+
+.profile form{
+    flex:none;
+    width:100%;
+    height: 100%;
+    padding: 15px 20px 41px 20px;
+    background: #E8E8E8;
+    border-radius: 5px;
+
+    display:flex;
+    align-items: center;
+    justify-items: center;
+    flex-wrap: wrap;
+}
+/* .profile profile_text{
+    flex:none;
+} */
+.container{
+    width:100%;
+    display:flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.profile input{
+    flex:none;
+}
+.container .form_title{
+    width:fit-content;
+}
+.container .profile_text{
+    width:fit-content;
+    height:22px;
+    margin-bottom: 0;
+    margin-left: 1px;
+    margin-right:8px;
+    vertical-align: middle;
+}
+.form_title{
+    flex:none;
+    width:100%;
+    height: 22px;
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    color: #666666;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    width: 24px;
+    height: 24px;
+    background-image: url("/static/imgs/icon_calendar.png");
+}
+input[type="date"]::before {
+	color: black;
+	content: attr(placeholder);
+    width: 149px;
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+}
+::-webkit-datetime-edit { display:none; }
+input[type="date"]:focus::before,
+input[type="date"]:valid::before {
+	content: "" !important;
+    width:0;
+}
+:focus::-webkit-datetime-edit,:valid::-webkit-datetime-edit{
+    display:inherit;
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+}
+
+
+ 
+
+.btn{
+    background: #448899;
+    border-radius: 5px;
+    color: #FFFFFF;
+    /* padding: 10px 20px; */
+    width: 154px;
+    height: 36px;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    vertical-align: middle;
+}
+
+.info{
+    flex:none;
+    width:100%;
+    padding:10px;
+    padding-bottom: 80px;
+    margin-top: 40px;
+    top:0;
+ 
+
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.info_content{
+    flex:none;
+    width:100%;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 23px;
+
+    /* Secondary Color/Gray 70 */
+    color: #666666;
+}
+.info_title{
+    flex:none;
+    width:100%;
+    margin-top: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+
+    /* Body - Bold 16(13.3) */
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 13px;
+    /* or 83% */
+    display: flex;
+    align-items: center;
+
+    /* Secondary Color/Gray 70 */
+    color: #666666;
+}
+
+
+@media(max-width:850px){
+    .mainframe{
+        margin-top: 0;
+    }
+    .section{
+        flex-wrap: wrap;
+        padding-left: 0;
+        padding-right: 0;
+        margin-top:0;
+        margin-bottom:40px;
+    }
+    .slideshow-container {
+        width:100%;
+        max-width: 850px;
+        margin-right: 0;
+        margin-bottom: 20px;
+    }
+    .profile{
+        width:100%;
+        max-width: 800px;
+        margin-left:0px;
+        padding-left: 10px;
+        padding-right: 10px;
+        
+    }
+    .profile form{
+        padding:15px 20px;
+    }
+    .info{
+        margin-top:50px;
+        width:94.4%;
+    }
+}
+
+@media(max-width:360px){
+    .section{
+        flex-wrap: wrap;
+        padding-left: 0;
+        padding-right: 0;
+        margin-top:0;
+        
+    }
+    .slideshow-container {
+        width:100%;
+        max-width: 466px;
+        margin-right: 0;
+        
+    }
+    .profile{
+        width:100%;
+    }
+    .profile_text{
+        height:48px;
+    }
+}

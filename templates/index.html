@@ -7,7 +7,7 @@
         <link rel="stylesheet" type="text/css" href="/static/css/index.css"/>
     </head>
     <body>
-
+        <!-- Navigation bar -->
         <div class="topnavground">
             <div class="topnavframe">
                 <div class="left">
@@ -24,6 +24,7 @@
             </div>
         </div>
 
+        <!-- Welcome slogan -->
         <div class="WelcomeBackground">
             <div class="Welcome">
                 <div class="slogan">
@@ -44,9 +45,12 @@
             </div>
         </div>
 
+        <!-- Content -->
         <div class="MainBackground">
             <div class="mainframe"></div>
         </div>
+
+        <!-- Footer -->
         <div class="footer">
             <div class="footer_box">
                     COPYRIGHT © 2021 台北一日遊
@@ -63,74 +67,12 @@
             
             
             var url="http://52.37.59.29:3000/";
-            
-            fetch([url+"api/attractions"]).then(function(response){
-                return response.json();
-            }).then(function(data){
-                //已經取得資料
-    
-                
-                //把資料呈現到畫面上
-                LoadMoreData();
+            // var url="http://127.0.0.1:3000/";
+            LoadData();
 
-                var myTimeout = setTimeout(SecondLoad, 800);
-        
-                function SecondLoad() {
-                    if(nextPage && (document.querySelector(".mainframe").clientHeight+document.querySelector(".WelcomeBackground").clientHeight+document.querySelector(".topnavground").clientHeight)<=window.innerHeight){
-                        LoadMoreData();
-                        clearTimeout(myTimeout);
-                    
-                    }
-                    
-                    footer=document.querySelector(".footer");
-                    footer.style.visibility="visible";
-                }
-                
 
-            });
-
-            //     let container=document.querySelectorAll(containerClass);
-            //     for(let i=0; i<container.length;i++){
-            //         let imgDiv=document.createElement('div');
-            //         let OverlaptextDiv=document.createElement('div');
-            //         let BottomtextDiv=document.createElement('div');
-            //         let BottomtextleftDiv=document.createElement('div');
-            //         let BottomtextrightDiv=document.createElement('div');
-            //         let img=document.createElement('img');
-            //         let textSpan=document.createElement('span');
-            //         img.src = data.data[i].images[0];
-                    
-            //         // set attributes
-            //         img.setAttribute("class","pic");
-            //         imgDiv.setAttribute("class","block_pic");
-            //         OverlaptextDiv.setAttribute("class","block_text_overlap");
-            //         BottomtextDiv.setAttribute("class","block_text_bottom");
-            //         BottomtextleftDiv.setAttribute("class","block_text_bottom_text_L");
-            //         BottomtextrightDiv.setAttribute("class","block_text_bottom_text_R");
-            //         textSpan.setAttribute("class","text_span");
-
-            //         textSpan.appendChild(document.createTextNode(data.data[i].name));
-            //         OverlaptextDiv.appendChild(textSpan);
-
-            //         let textLeft=document.createTextNode(data.data[i].mrt)
-            //         let textRight=document.createTextNode(data.data[i].category)
-
-            //         imgDiv.appendChild(img);
-            //         container[i].appendChild(imgDiv);
-            //         container[i].appendChild(OverlaptextDiv);
-            //         BottomtextleftDiv.appendChild(textLeft);
-            //         BottomtextrightDiv.appendChild(textRight);
-            //         BottomtextDiv.appendChild(BottomtextleftDiv);
-            //         BottomtextDiv.appendChild(BottomtextrightDiv);
-            //         container[i].appendChild(BottomtextDiv); 
-            //     }
-
-            //     if (window.innerHeight>=1200){
-            //             LoadMoreData();
-            //     }
-                
-            // }
             function createBlock(Count, data){
+                //Create elements inside Content block
                 let container=document.createElement('div');
                 let imgDiv=document.createElement('div');
                 let OverlaptextDiv=document.createElement('div');
@@ -143,6 +85,7 @@
 
                 // set attributes
                 container.setAttribute("class","block");
+                container.setAttribute("id",data.data[Count].id);
                 img.setAttribute("class","pic");
                 imgDiv.setAttribute("class","block_pic");
                 OverlaptextDiv.setAttribute("class","block_text_overlap");
@@ -169,13 +112,17 @@
                 Count++;
                 return {'Count':Count, 'container':container}
             }
+            
             function NoMoreData(GrandParentNode,ParentNode){
+                //Not used yet
                 let buttonNode=document.querySelector(".button");
                 buttonNode.textContent="No more data";
                 GrandParentNode.insertBefore(ParentNode,buttonNode);
                 return;
             }
-            function LoadMoreData(){
+
+            function LoadData(){
+                console.log("nextPage= "+nextPage);
                 isLoading=true;
                 let mainframe=document.querySelector(".mainframe");
                 if (nextPage===null){return;}
@@ -206,15 +153,21 @@
                         
                         createContent(Content, blank1, blank2, blankDesk, mainframe,4*i, dataAmount, data)
                         
+                        footer=document.querySelector(".footer");
+                        footer.style.visibility="visible";
+
+                        
+                    }
+                    if(nextPage && (document.querySelector(".mainframe").scrollHeight+document.querySelector(".mainframe").offsetTop)<=window.innerHeight && !isLoading){
+                            LoadData();
                     }
                     return;
                 })
                 
             }
             
-
             function createContent(Content, blank1, blank2, blankDesk, mainframe, Count, dataAmount, data){
-                if (!nextPage && Count>=dataAmount){/*NoMoreData(mainframe,Content);*/return;}
+                if (!nextPage && Count>=dataAmount){return;}
                 funcOutput=createBlock(Count, data);
                 Count=funcOutput.Count;
                 Content.appendChild(funcOutput.container);
@@ -251,30 +204,21 @@
             
             // scroll event handling
             var didScroll = false;
-            // var handleScroll = function() {
-            //     if ( didScroll ) {
-            //         didScroll = false;
-            //         footer=document.querySelector(".footer");
-            //         footer.style.visibility="hidden";
-            //         // Check your page position and do stuff
-            //         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && !isLoading){
-            //             LoadMoreData();
-            //         }
-            //     }
-            // };
-            window.onscroll=function() {
+         
+            window.addEventListener("wheel",wheelfunc);
+            function wheelfunc(){
                 didScroll = true;
 
                 if ( didScroll ) {
                 didScroll = false;
-                // Check your page position and do stuff
-                if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight){
-                    if(!isLoading){LoadMoreData();}
+
+                if ((window.innerHeight + window.scrollY) >= document.querySelector(".mainframe").offsetHeight+document.querySelector(".mainframe").offsetTop){
+                    if(!isLoading){LoadData();}
                     
                 }
                 }
-            };
-            // setInterval(handleScroll, 250);
+            }
+           
 
             function removeAllChildNodes(parent) {
                 while (parent.firstChild) {
@@ -288,19 +232,18 @@
                 removeAllChildNodes(elmt);
                 nextPage=0;
                 keyword=document.getElementById("keyword").value;
-                LoadMoreData();
+                LoadData();
+            }
 
-                var myTimeout = setTimeout(SecondLoad, 600);
-        
-                function SecondLoad() {
-                    if(nextPage && (document.querySelector(".mainframe").clientHeight+document.querySelector(".WelcomeBackground").clientHeight+document.querySelector(".topnavground").clientHeight)<=window.innerHeight){
-                        LoadMoreData();
-                        clearTimeout(myTimeout);
-                        }
+            function findAttractionID(data, name){
+                for(let i=0;i<data.data.length;i++){
+                    if(data.data[i].name==name){
+                        return data.data[i].id;
+                    }
                 }
             }
             
-            // (A) GET DATA FROM SERVER VIA AJAX FETCH
+            // (A) GET CATEGORY DATA FROM SERVER VIA AJAX FETCH
             fetch(url+"api/categories")
             .then((res) => res.json())
             .then((data) => {
@@ -320,11 +263,12 @@
                 }
 
                 list_wrapper.style.visibility = "hidden"; // hide
+                //When user clicks search bar, show the category list
                 filter.addEventListener('click',function(e){
                     list_wrapper.style.visibility="visible"; //show
                 },false)
             
-                // (D) SAME AS BEFORE
+                // (D) only show matching results
                 list = document.querySelectorAll("#category_list div");
                 filter.onkeyup = () => {
                     // (D1) GET CURRENT SEARCH TERM
@@ -351,6 +295,7 @@
                     i.addEventListener("click", catPressed);
                 }
 
+                // hide the list when user click on window area except for search bar
                 document.addEventListener('click', function(e) {
                     e = e || window.event;
                     var target = e.target || e.srcElement;
@@ -358,11 +303,32 @@
                         list_wrapper.style.visibility="hidden";
                     }
                 }, false);
-
-
+  
                 });
             
-            
+            // redirect to attraction page.
+            document.addEventListener('click', function(e) {
+                e = e || window.event;
+                var target = e.target || e.srcElement;
+                
+                if(target.classList[0]=="block"){
+                    ID=target.id;
+                    window.location.assign(url+"attraction/"+ID);
+                }else if(target.parentNode.classList[0] =="block"){
+                    target=target.parentNode;
+                    ID=target.id;
+                    window.location.assign(url+"attraction/"+ID);
+                }else if(target.parentNode.parentNode.classList[0]=="block"){
+                    target=target.parentNode.parentNode;
+                    ID=target.id;
+                    window.location.assign(url+"attraction/"+ID);
+                }else if(target.parentNode.parentNode.parentNode.classList[0]=="block"){
+                    target=target.parentNode.parentNode.parentNode;
+                    ID=target.id;
+                    window.location.assign(url+"attraction/"+ID);
+                }      
+                    
+            }, false);
         
         </script>
     </body>

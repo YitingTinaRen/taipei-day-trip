@@ -26,6 +26,7 @@ html,body{
     height: 34px;
     position: relative;
 }
+
 .left{
     flex:none;
     justify-content: flex-start;
@@ -372,7 +373,6 @@ html,body{
     vertical-align: middle;
     white-space:nowrap;
  }
- 
 
 @media(max-width:700px){
     .mainframe{
