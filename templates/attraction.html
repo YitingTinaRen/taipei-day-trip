@@ -5,24 +5,29 @@
         <meta charset="utf-8"/>
         <title>Attraction</title>
         <link rel="stylesheet" type="text/css" href="/static/css/attraction.css"/>
+        <script src="/static/js/attraction.js"></script>
     </head>
     <body>
         <!-- Navigation bar -->
-        <div class="topnavground">
-            <div class="topnavframe">
-                <div class="left">
-                    <a class="left">台北一日遊</a>
+    <div class="topnavground">
+        <div class="topnavframe">
+            <div class="left">
+                <a class="left" onclick="location.href='/'" >台北一日遊</a>
+            </div>
+            <div class="right">
+                <div class="RightItem1">
+                    預定行程
                 </div>
-                <div class="right">
-                    <div class="RightItem1">
-                        預定行程
-                    </div>
-                    <div class="RightItem2">
-                        登入/註冊
-                    </div>
+                <div class="RightItem2" onclick="document.getElementById('id01').style.display='flex'">
+                    登入/註冊
+                </div>
+                <div class="RightItem2" onclick="logout()" style="display:none">
+                    登出系統
                 </div>
             </div>
         </div>
+    </div>
+
         <!-- Separator -->
         <div class="Separator"></div>
         <!-- Main content -->
@@ -53,6 +58,50 @@
         </div>
 
 
+        <!-- Login/singup form -->
+    <div id="id01" class="LoginForm">
+
+        <div class="LoginForm-content animate">
+            <div class="colorbar"></div>
+
+            <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close LoginForm"><img
+                    src="/static/imgs/icon_close.png/" style="width:16px;height:16px;"></span>
+
+            <div class="container">
+                <div class="form_title">登入會員資料</div>
+                <input type="text" placeholder="登入電子信箱" name="email" required>
+                <input type="password" placeholder="輸入密碼" name="psw" required>
+
+                <button type="submit" onclick="login()">登入帳戶</button>
+                <div class="form_text">還沒有帳戶？<span id="id03"
+                        onclick="document.getElementById('id01').style.display='none';document.getElementById('id02').style.display='flex'">點此註冊</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="id02" class="LoginForm">
+
+        <div class="LoginForm-content animate">
+            <div class="colorbar"></div>
+
+            <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close LoginForm"><img
+                    src="/static/imgs/icon_close.png/" style="width:16px;height:16px;"></span>
+
+            <div class="container">
+                <div class="form_title">註冊會員帳號</div>
+                <input type="text" placeholder="輸入姓名" name="uname" required>
+                <input type="text" placeholder="登入電子信箱" name="email" required>
+                <input type="password" placeholder="輸入密碼" name="psw" required>
+
+                <button type="submit" onclick="register()">註冊新帳戶</button>
+                <div class="form_text">已經有帳戶了？<span id="id04"
+                        onclick="document.getElementById('id01').style.display='flex';document.getElementById('id02').style.display='none'">點此登入</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
         <!-- Footer -->
         <div class="footer">
             <div class="footer_box">
@@ -61,260 +110,7 @@
         </div>
 
 
-        <script>
-            
-            // Extract attraction id from current url
-            current_url=location.href;
-            attraction_id=current_url.substr(current_url.lastIndexOf('/')+1)
-            var images;
-            let slideIndex = 1;
-    
-            // Next/previous controls
-            function plusSlides(n) {
-            showSlides(slideIndex += n);
-            }
-    
-            // Thumbnail image controls
-            function currentSlide(n) {
-            showSlides(slideIndex = n);
-            }
-    
-            function showSlides(n) {
-            let i;
-            let slides = document.getElementsByClassName("mySlides");
-            let dots = document.getElementsByClassName("dot");
-            if (n > slides.length) {slideIndex = 1} 
-            if (n < 1) {slideIndex = slides.length}
-            for (i = 0; i < slides.length; i++) {
-                slides[i].style.display = "none"; 
-            }
-            for (i = 0; i < dots.length; i++) {
-                dots[i].className = dots[i].className.replace(" active", "");
-            }
-            slides[slideIndex-1].style.display = "block"; 
-            dots[slideIndex-1].className += " active";
-            }
-    
-            function putInfo(data){
-                let container=document.querySelector(".info");
-                let description=document.createElement('div');
-                let address_title=document.createElement('div');
-                let address=document.createElement('div');
-                let transport_title=document.createElement('div');
-                let transport=document.createElement('div');
-    
-                // Set Attributes
-                description.setAttribute("class","info_content");
-                address.setAttribute("class","info_content");
-                transport.setAttribute("class","info_content");
-                address_title.setAttribute("class","info_title");
-                transport_title.setAttribute("class","info_title");
-    
-                description.appendChild(document.createTextNode(data.data.description));
-                address.appendChild(document.createTextNode(data.data.address));
-                transport.appendChild(document.createTextNode(data.data.transport));
-                address_title.appendChild(document.createTextNode("景點地址:"));
-                transport_title.appendChild(document.createTextNode("交通方式:"));
-    
-                container.appendChild(description);
-                container.appendChild(address_title);
-                container.appendChild(address);
-                container.appendChild(address);
-                container.appendChild(transport_title);
-                container.appendChild(transport);
-    
-            }
-    
-            function putProfile(data){
-                let container=document.querySelector(".profile");
-                let name=document.createElement("div");
-                let cat_mrt=document.createElement("div");
-    
-                name.setAttribute("class","name");
-                cat_mrt.setAttribute("class","profile_text");
-    
-                name.appendChild(document.createTextNode(data.data.name));
-                cat_mrt.appendChild(document.createTextNode(data.data.category+" at "+data.data.mrt));
-    
-                container.appendChild(name);
-                container.appendChild(cat_mrt);
-                insertForm(container);
-    
-            }
-    
-            function insertForm(profile){
-                let container=document.createElement("form");
-                container.action="#";
-                container.method="post";
-    
-                let sub_container1=document.createElement("div");
-                let sub_container2=document.createElement("div");
-                let sub_container3=document.createElement("div");
-                
-    
-                let title1=document.createElement("div");
-                let title2=document.createElement("div");
-                let title3=document.createElement("div");
-                let title4=document.createElement("div");
-                let text1=document.createElement("div");
-                let text2=document.createElement("div");
-                let text3=document.createElement("div");
-                let text4=document.createElement("div");
-                let btn=document.createElement("button");
-                let input1=document.createElement("input");
-                let input2=document.createElement("input");
-                let input3=document.createElement("input");
-                input1.style.marginLeft="5px";
-    
-    
-                title1.setAttribute("class","form_title");
-                title2.setAttribute("class","form_title");
-                title3.setAttribute("class","form_title");
-                title4.setAttribute("class","form_title");
-                text1.setAttribute("class","profile_text");
-                text2.setAttribute("class","profile_text");
-                text3.setAttribute("class","profile_text");
-                text4.setAttribute("class","profile_text");
-                btn.setAttribute("class","btn");
-                sub_container1.setAttribute("class","container");
-                sub_container2.setAttribute("class","container");
-                sub_container3.setAttribute("class","container");
-    
-                title1.style.marginBottom="15px";
-                input1.type="date";
-                input1.name="date";
-                input1.placeholder="yyyy/mm/dd";
-                // input1.onfocus="(this.placeholder='')";
-                // input1.onchange="this.className=(this.value!=''?'has-value':'')";
-                input1.required=true;
-                input1.style.width="193px";
-                input1.style.height="35px";
-                input1.style.padding="5px 10px";
-                input2.type="radio";
-                input3.type="radio";
-                input2.name="time";
-                input2.value="上半天";
-                input3.name="time";
-                input3.value="下半天";
-                input2.style.width="22px";
-                input2.style.height="22px";
-                input3.style.width="22px";
-                input3.style.height="22px";
-                input2.style.marginLeft="10px";
-                input3.style.marginLeft="10px";
-                text2.style.marginLeft="5px";
-    
-                title1.appendChild(document.createTextNode("訂購導覽行程"));
-                title2.appendChild(document.createTextNode("選擇日期:"));
-                title3.appendChild(document.createTextNode("選擇時間:"));
-                title4.appendChild(document.createTextNode("導覽費用:"));
-                text1.appendChild(document.createTextNode("以此景點為中心的一日行程，帶您探索城市角落故事"));
-                text2.appendChild(document.createTextNode("新台幣2000元"));
-                text3.appendChild(document.createTextNode("上半天"));
-                text4.appendChild(document.createTextNode("下半天"));
-                btn.appendChild(document.createTextNode("開始預約行程"));
-    
-                container.appendChild(title1);
-                container.appendChild(text1);
-                sub_container1.appendChild(title2);
-                sub_container1.appendChild(input1);
-                container.appendChild(sub_container1);
-                sub_container2.appendChild(title3);
-                sub_container2.appendChild(input2);
-                sub_container2.appendChild(text3);
-                sub_container2.appendChild(input3);
-                sub_container2.appendChild(text4);
-                container.appendChild(sub_container2);
-                sub_container3.appendChild(title4);
-                sub_container3.appendChild(text2);
-                container.appendChild(sub_container3);
-                container.appendChild(btn);
-                profile.appendChild(container);
-            }
-    
-            function drawSlides(images){
-                imageNum=images.length;
-                let container=document.querySelector(".slideshow-container");
-                for(let i=0; i<imageNum;i++){
-    
-                    let myslides=document.createElement('div');
-                    let img=document.createElement("img")
-                    
-                    myslides.setAttribute("class","mySlides fade");
-    
-                    img.src=images[i];
-                    img.style.width= "100%" ;
-                    img.style.borderRadius="5px";
-                    img.style.height="406px";
-                    img.style.objectPosition="center center";
-                    img.style.objectFit="cover";
-    
-                    myslides.appendChild(img);
-                    container.appendChild(myslides);
-                    
-                }
-    
-                let dot_container=document.createElement("div");
-                dot_container.setAttribute("class","dot_container");
-                dot_container.style.textAlign="center";
-                dot_container.style.left=540/2-(imageNum*12);
-                for(let i=0; i<imageNum;i++){
-                    let dot=document.createElement("span");
-                    dot.setAttribute("class", "dot");
-                    dot.onclick="currentSlide("+String(i+1)+")";
-                    dot_container.appendChild(dot);
-                }
-                container.appendChild(dot_container);
-    
-                let prev=document.createElement("a");
-                let next=document.createElement("a");
-                let img_prev=document.createElement("img");
-                let img_next=document.createElement("img");
-    
-                prev.setAttribute("class","prev");
-                next.setAttribute("class","next");
-    
-                prev.setAttribute("onclick","plusSlides(-1);");
-                next.setAttribute("onclick","plusSlides(1);");
-                img_prev.src="/static/imgs/btn_leftArrow.png";
-                img_next.src="/static/imgs/btn_rightArrow.png";
-    
-                prev.appendChild(img_prev);
-                next.appendChild(img_next);
-                container.appendChild(prev);
-                container.appendChild(next);
-            }
-    
-            
-    
-            // Request attracton info from api
-            url="http://52.37.59.29:3000/api/attraction/"+attraction_id;
-            // url="http://127.0.0.1:3000/api/attraction/"+attraction_id;
-            fetch(url).then(function(res){
-                return res.json();
-            }).then(function(data){
-                console.log(data.data);
-                putInfo(data);
-                
-                images=data.data.images;
-                drawSlides(images);
-                showSlides(slideIndex);
-                putProfile(data);
-    
-                // make footer to be at the bottom of the content
-                if((document.querySelector(".MainBackground").scrollHeight+document.querySelector(".MainBackground").offsetTop+104)<=window.innerHeight){
-                    console.log("in if")
-                    let distance2bottom=window.innerHeight-document.querySelector(".topnavground").scrollHeight-document.querySelector(".MainBackground").scrollHeight-104;
-                    document.querySelector(".mainframe").style.paddingBottom=distance2bottom.toString()+"px";
-                }
-                footer=document.querySelector(".footer");
-                footer.style.visibility="visible";
-            });
-    
-    
-            
-            
-        </script>
+        
     </body>
     
 </html>
