@@ -65,6 +65,14 @@ TABLES['imgURL'] = (
    "  CONSTRAINT `imgURL_ibfk_1` FOREIGN KEY (`id`) REFERENCES `attractions` (`id`) ON DELETE CASCADE "
     ") ENGINE=InnoDB")
 
+TABLES['member']=(
+    "CREATE TABLE `member` ("
+    "`member_id` bigint not null auto_increment primary key,"
+    "`username` varchar(255) not null,"
+    "`email` varchar(320) not null,"
+    "`password` varchar(255) not null"
+    ") ENGINE=InnoDB")
+
 
 # Connect to database
 DB_NAME="TaipeiDayTrip"
