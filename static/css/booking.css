@@ -1,0 +1,260 @@
+html, body{
+    height:100%;
+    margin:0;
+}
+my-separator{
+    width:100%;
+}
+.frame-container{
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    width:100%;
+    padding:0;
+    margin:0;
+}
+.frame{
+    flex:none;
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    flex-direction: column;
+    max-width:1200px;
+    width:100%;
+    padding:0;
+    margin:0;
+}
+.head-line{
+    flex:none;
+    max-width:1000px;
+    width:83.3%;
+    height:27px;
+    margin: 40px 0 30px 0;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 19px;
+    color: #666666;
+}
+.section{
+    flex:none;
+    max-width:980px;
+    width:81.67%;
+    margin-bottom: 40px;
+    display:flex;
+    justify-content: center;
+    align-items:flex-start;
+}
+.journey-image{
+    flex:none;
+    width: 250px;
+    height:200px;
+}
+.journey-image img{
+    width:100%;
+    height:200px;
+    object-fit: cover;
+    object-position: center center;
+}
+.journey-info{
+    flex:none;
+    flex-grow: 1;
+    padding:0;
+    position: relative;
+    max-width: 700px;
+    margin-left: 30px;
+}
+
+.title{
+    height:24px;
+    width:100%;
+    padding: 0;
+    margin:0 0 30px 0;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    color: #448899;
+
+}
+.journey-info p{
+    height:24px;
+    width:100%;
+    padding: 0;
+    margin: 10px 0 0 0;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+    color: #666666;
+}
+span{
+    flex: none;
+    max-width: 1000px;
+    width: 83.3%;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+}
+.delete-icon{
+    flex:none;
+    width: 30px;
+    height:30px;
+    object-fit: cover;
+
+    position:absolute;
+    right:0;
+    top:0;
+
+    cursor: pointer;
+}
+.content{
+    flex:none;
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    max-width: 980px;
+    width: 81.67%;
+    margin:40px 0 40px 0;
+}
+.content .head-line{
+    height:24px;
+    margin: 0 0 5px 0;
+}
+.form-row{
+    flex:none;
+    display:flex;
+    justify-content:flex-start;
+    align-items: center;
+    height:38px;
+    width:100%;
+    margin:15px 0 0px 0;
+}
+input{
+    flex:none;
+    height:18px;
+    width: 180px;
+
+    /* White */
+    background: #FFFFFF;
+    /* Gray 300 */
+
+    border: 1px solid #E8E8E8;
+    border-radius: 5px;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    padding:10px 10px 10px 10px;
+
+}
+.input-title{
+    flex:none;
+    height:24px;
+    width:81px;
+    padding:0;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+
+
+    color: #666666;
+}
+
+.notice-text{
+    flex:none;
+    height:24px;
+    width:100%;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 16px;
+
+
+    color: #666666;
+}
+.confirm{
+    flex:none;
+    display:flex;
+    flex-direction: column;
+    align-items: flex-end;
+    max-width: 980px;
+    width: 81.67%;
+    height:100px;
+    margin:40px 0 40px 0;
+    position:relative;
+}
+.confirm .notice-text{
+    height:20px;
+    width:174px;
+    text-align: end;
+
+    position:absolute;
+    right:0;
+    top:0;
+}
+button{
+    flex:none;
+    width: 173px;
+    height: 36px;
+    margin: 20px 0 20px 0px;
+    position:absolute;
+    right:0;
+    bottom:0;
+
+    background: #448899;
+    border-radius: 5px;
+
+    font-family: 'Noto Sans TC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 19px;
+    color: #FFFFFF;
+
+    cursor: pointer;
+}
+
+@media(max-width:700px){
+    .head-line {
+        width: 94.4%;
+    }
+    span{
+        width:94.4%;
+    }
+    .section{
+        flex-wrap:wrap;
+        width: 94.4%;
+    }
+    .journey-image{
+       width:100%;
+       margin:0; 
+    }
+    .journey-info{
+        width:100%;
+        margin: 30px 0 0 0;
+    }
+    .delete-icon{
+        bottom:0;
+        top:auto;
+    }
+    .confirm {
+        width: 94.4%;
+    }
+
+    .content {
+        width: 94.4%;
+    }
+    
+}
+

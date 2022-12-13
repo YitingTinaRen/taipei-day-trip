@@ -1,18 +1,7 @@
-var nextPage=0;
-var keyword="";
-var list;
-var isLoading=false;
-
-fetch("/api/user/auth").then((response)=>{return response.json()}).then(function(auth){
-    if(!auth){
-        document.querySelectorAll(".RightItem2")[0].style.display='block';
-        document.querySelectorAll(".RightItem2")[1].style.display='none';
-    }else{
-        document.querySelectorAll(".RightItem2")[0].style.display='none';
-        document.querySelectorAll(".RightItem2")[1].style.display='block';
-    }
-})
-
+let nextPage=0;
+let keyword="";
+let list;
+let isLoading=false;
 
 LoadData();
 
@@ -67,7 +56,6 @@ function NoMoreData(GrandParentNode,ParentNode){
 }
 
 function LoadData(){
-    // console.log("nextPage= "+nextPage);
     isLoading=true;
     if (nextPage===null){return;}
     fetch(["/api/attractions?page="+nextPage+"&keyword="+keyword]).then(function(response){
@@ -98,8 +86,7 @@ function LoadData(){
             
             createContent(Content, blank1, blank2, blankDesk, mainframe,4*i, dataAmount, data)
             
-            footer=document.querySelector(".footer");
-            footer.style.visibility="visible";
+            showFooter();
 
             
         }
@@ -275,111 +262,3 @@ document.addEventListener('click', function(e) {
         
 }, false);
 
-// Get the Login/signup form
-var LoginForm = document.getElementById('id01');
-
-// When the user clicks anywhere outside of the LoginForm, close it
-window.onclick = function(event) {
-    if (event.target == LoginForm) {
-        LoginForm.style.display = "none";
-    }
-}
-
-
-function register(){
-    uname=document.getElementsByName("uname")[0].value;
-    email=document.getElementsByName("email")[1].value;
-    psw=document.getElementsByName("psw")[1].value;
-    data={"name":uname, "email":email, "password":psw};
-    console.log(data);
-
-    fetch("/api/user",
-        {
-            method:"POST",
-            headers:{
-                'Content-Type':'application/json',
-            },
-            body:JSON.stringify(data),
-        }
-    ).then(function(res){
-        return res.json();
-    }).then(function(result){
-        console.log(result);
-        if(result['ok']){
-            success_text="註冊成功!";
-            if(document.querySelectorAll("#id02 .LoginForm-content .form_text").length==1){
-                referenceNode=document.querySelector("#id02 .LoginForm-content .form_text");
-                parentNode=document.querySelector("#id02 .LoginForm-content .container");
-                newNode=document.createElement("div");
-                newNode.setAttribute("class","form_text");
-                newNode.appendChild(document.createTextNode(success_text));
-                parentNode.insertBefore(newNode,referenceNode);
-            }else{
-                document.querySelectorAll("#id02 .LoginForm-content .form_text")[0].textContent=success_text;
-            }
-        }
-        if(result['error']){
-            if(document.querySelectorAll("#id02 .LoginForm-content .form_text").length==1){
-                referenceNode=document.querySelector("#id02 .LoginForm-content .form_text");
-                parentNode=document.querySelector("#id02 .LoginForm-content .container");
-                newNode=document.createElement("div");
-                newNode.setAttribute("class","form_text");
-                newNode.appendChild(document.createTextNode(result["message"]));
-                parentNode.insertBefore(newNode,referenceNode);
-            }else{
-                document.querySelectorAll("#id02 .LoginForm-content .form_text")[0].textContent=result["message"];
-            }
-        }
-    });
-}
-
-function login(){
-    email=document.getElementsByName("email")[0].value;
-    psw=document.getElementsByName("psw")[0].value;
-    data={"email":email, "password":psw};
-
-    fetch("/api/user/auth",
-        {
-            method:"PUT",
-            headers:{
-                'Content-Type':'application/json',
-            },
-            body:JSON.stringify(data),
-        }
-    ).then(function(res){
-        return res.json();
-    }).then(function(result){
-        console.log(result);
-        if(result['ok']){
-            window.location.reload();
-        }
-        else if(result['error']){
-            console.log(result);
-            if(document.querySelectorAll("#id01 .LoginForm-content .form_text").length ==1){
-                referenceNode=document.querySelector("#id01 .LoginForm-content .form_text");
-                parentNode=document.querySelector("#id01 .LoginForm-content .container");
-                newNode=document.createElement("div");
-                newNode.setAttribute("class","form_text");
-                newNode.appendChild(document.createTextNode(result["message"]));
-                parentNode.insertBefore(newNode,referenceNode);
-            }else{
-                document.querySelectorAll("#id01 .LoginForm-content .form_text")[0].textContent=result["message"];
-            }
-        }
-    });
-}
-
-function logout(){
-    fetch("/api/user/auth",
-        {
-            method:"DELETE",
-        }
-    ).then(function(res){
-        return res.json();
-    }).then(function(result){
-        console.log(result);
-        if(result){
-            window.location.reload();
-        }
-    });
-}
