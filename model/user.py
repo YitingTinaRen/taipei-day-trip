@@ -2,7 +2,7 @@ from flask import jsonify, make_response
 import re
 import jwt
 from datetime import datetime, timedelta
-import model.db as db
+import model
 import config
 import json
 
@@ -13,16 +13,16 @@ class USER:
             return jsonify({"error":True, "message": "Please fill out the form."}), 400
         elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
             return jsonify({"error":True, "message": "Invalid email."}), 400
-        elif db.db.search_member_by_email(email):
+        elif model.db.search_member_by_email(email):
             return jsonify({"error": True, "message":"Email already exists."}), 400
         else:
-            if db.db.register(username, email, psw):
+            if model.db.register(username, email, psw):
                 return jsonify({"ok":True}),200
             else:
                 return jsonify({"error":True, "message":"Server internal error."}), 500
     
     def login(email, password):
-        DB_result=db.db.search_member_by_email(email)
+        DB_result=model.db.search_member_by_email(email)
         if not email or not password:
             return jsonify({"error":True, "message":"Please fill out the form."}), 400
 
@@ -70,7 +70,7 @@ class USER:
         if "error" in user_data:
             return jsonify({"error": True, "message": user_data["message"]}), 400
         
-        result = db.db.check_booking(user_data['data']['id'])
+        result = model.db.check_booking(user_data['data']['id'])
         if not result:
             return jsonify(None), 200
         else:
@@ -88,12 +88,12 @@ class USER:
         if "error" in user_data:
             return jsonify({"error":True, "message":user_data["message"]}), 400
 
-        has_book_history=db.db.check_booking(user_data["data"]["id"])
+        has_book_history=model.db.check_booking(user_data["data"]["id"])
         if not has_book_history:
-            result=db.db.build_booking(user_data["data"]["id"], booking_data["attractionId"], 
+            result=model.db.build_booking(user_data["data"]["id"], booking_data["attractionId"], 
                                         booking_data["date"],booking_data["time"], booking_data["price"])
         else:
-            result = db.db.update_booking(user_data["data"]["id"], booking_data["attractionId"],
+            result = model.db.update_booking(user_data["data"]["id"], booking_data["attractionId"],
                                           booking_data["date"], booking_data["time"], booking_data["price"])
         
         if result:
@@ -112,7 +112,7 @@ class USER:
         if "error" in user_data:
             return jsonify({"error": True, "message": user_data["message"]}), 400
 
-        result = db.db.delete_booking(user_data["data"]["id"])
+        result = model.db.delete_booking(user_data["data"]["id"])
         if result:
             return jsonify({"ok": True}), 200
         else:

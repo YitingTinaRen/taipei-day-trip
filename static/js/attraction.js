@@ -3,7 +3,32 @@ current_url=location.href;
 let attraction_id=current_url.substr(current_url.lastIndexOf('/')+1)
 let images;
 let slideIndex = 1;
+let img=[];
 
+// Request attracton info from api
+fetch("/api/attraction/" + attraction_id).then(function (res) {
+    return res.json();
+}).then(function (data) {
+
+    imgPreload(data.data.images);
+
+    putInfo(data);
+    images = data.data.images;
+    drawSlides(images);
+    showSlides(slideIndex);
+    putProfile(data);
+    changeWebTitle(data.data.name);
+    // make footer to be at the bottom of the content
+    showFooter();
+});
+
+
+//Funtions:
+// Change content of title tag
+function changeWebTitle(attraction_name){
+    title=document.querySelector("title");
+    title.innerHTML=attraction_name;
+}
 
 // Next/previous controls
 function plusSlides(n) {
@@ -169,23 +194,15 @@ function insertForm(profile){
 }
 
 function drawSlides(images){
-    imageNum=images.length;
+    imageNum=img.length;
     let container=document.querySelector(".slideshow-container");
     for(let i=0; i<imageNum;i++){
 
         let myslides=document.createElement('div');
-        let img=document.createElement("img")
         
         myslides.setAttribute("class","mySlides fade");
 
-        img.src=images[i];
-        img.style.width= "100%" ;
-        img.style.borderRadius="5px";
-        img.style.height="406px";
-        img.style.objectPosition="center center";
-        img.style.objectFit="cover";
-
-        myslides.appendChild(img);
+        myslides.appendChild(img[i]);
         container.appendChild(myslides);
         
     }
@@ -259,23 +276,9 @@ function startBooking(){
     })
 }
 
-// Request attracton info from api
-fetch("/api/attraction/"+attraction_id).then(function(res){
-    return res.json();
-}).then(function(data){
-    // console.log(data.data);
-    putInfo(data);
-    
-    images=data.data.images;
-    drawSlides(images);
-    showSlides(slideIndex);
-    putProfile(data);
-
-    // make footer to be at the bottom of the content
-    if((document.querySelector(".MainBackground").scrollHeight+document.querySelector(".MainBackground").offsetTop+104)<=window.innerHeight){
-        // console.log("in if")
-        let distance2bottom=window.innerHeight-document.querySelector(".topnavground").scrollHeight-document.querySelector(".MainBackground").scrollHeight-104;
-        document.querySelector(".mainframe").style.paddingBottom=distance2bottom.toString()+"px";
+function imgPreload() {
+    for (let i = 0; i < arguments[0].length; i++) {
+        img[i] = new Image();
+        img[i].src = arguments[0][i];
     }
-    showFooter();
-});
+}

@@ -44,6 +44,9 @@ fetch("/api/user/auth").then((res)=>{return res.json()})
     }
 });
 
+
+//Functions:
+
 function render_booking_summary(username,data){
     // Insert welcome words
     headLine=document.querySelector(".head-line");

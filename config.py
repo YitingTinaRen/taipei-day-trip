@@ -7,7 +7,7 @@ DB_POOL_NAME='mypool'
 DB_POOL_SIZE=20
 
 # Flask app configuration
-DEBUG = False
+DEBUG = True
 PORT = 3000
 HOST = "0.0.0.0"
 SECRET_KEY = "TaipeiDayTripSecretKey"
