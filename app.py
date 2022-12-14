@@ -2,18 +2,17 @@ from flask import *
 from flask_cors import CORS
 from route.attraction_api import attraction_api
 from route.account_api import account_api
+from route.booking_api import booking_api
+import config
 
 app=None
 
 app=Flask(__name__)
-app.config["JSON_AS_ASCII"]=False
-app.config["TEMPLATES_AUTO_RELOAD"]=True
-app.config['JSONIFY_MIMETYPE'] ="application/json;charset=utf-8"
-app.config["JSONIFY_PRETTYPRINT_REGULAR"]="True"
-app.config["SECRET_KEY"]="TaipeiDayTripSecretKey"
+app.config.from_object(config)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(attraction_api, url_prefix="/")
 app.register_blueprint(account_api, url_prefix="/")
+app.register_blueprint(booking_api, url_prefix="/")
 
 
 # Pages
@@ -31,5 +30,5 @@ def thankyou():
 	return render_template("thankyou.html")
 
 
-app.run(host='0.0.0.0', port=3000, debug=False)
+app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)
 

@@ -62,7 +62,7 @@ TABLES['imgURL'] = (
     "  `id` int(100) not null, "
     "  `images` varchar(2000) NOT NULL,"
     "  PRIMARY KEY (`url_id`),"
-   "  CONSTRAINT `imgURL_ibfk_1` FOREIGN KEY (`id`) REFERENCES `attractions` (`id`) ON DELETE CASCADE "
+    "  CONSTRAINT `imgURL_ibfk_1` FOREIGN KEY (`id`) REFERENCES `attractions` (`id`) ON DELETE CASCADE "
     ") ENGINE=InnoDB")
 
 TABLES['member']=(
@@ -71,6 +71,19 @@ TABLES['member']=(
     "`username` varchar(255) not null,"
     "`email` varchar(320) not null,"
     "`password` varchar(255) not null"
+    ") ENGINE=InnoDB")
+
+TABLES['booking']=(
+    "CREATE TABLE `booking` ("
+    "`booking_id` bigint not null auto_increment primary key,"
+    "`member_id` bigint not null,"
+    "`attraction_id` int(100) not null,"
+    "`date` date not null,"
+    "`time` varchar(10) not null,"
+    "`price` int not null default 2000,"
+    "`confirmation` boolean not null default FALSE,"
+    "foreign key(`member_id`) references `member` (`member_id`) on delete cascade on update cascade,"
+    "foreign key(`attraction_id`) references `attractions` (`id`) on delete cascade on update cascade"
     ") ENGINE=InnoDB")
 
 
@@ -107,6 +120,7 @@ except mysql.connector.Error as err:
 # Create tables
 for table_name in TABLES:
     table_description = TABLES[table_name]
+    # print(table_description)
     try:
         print("Creating table {}: ".format(table_name), end='')
         cursor.execute(table_description)

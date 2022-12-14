@@ -1,18 +1,9 @@
 // Extract attraction id from current url
 current_url=location.href;
-attraction_id=current_url.substr(current_url.lastIndexOf('/')+1)
-var images;
+let attraction_id=current_url.substr(current_url.lastIndexOf('/')+1)
+let images;
 let slideIndex = 1;
 
-fetch("/api/user/auth").then((response)=>{return response.json()}).then(function(auth){
-    if(!auth){
-        document.querySelectorAll(".RightItem2")[0].style.display='block';
-        document.querySelectorAll(".RightItem2")[1].style.display='none';
-    }else{
-        document.querySelectorAll(".RightItem2")[0].style.display='none';
-        document.querySelectorAll(".RightItem2")[1].style.display='block';
-    }
-})
 
 // Next/previous controls
 function plusSlides(n) {
@@ -88,9 +79,9 @@ function putProfile(data){
 }
 
 function insertForm(profile){
-    let container=document.createElement("form");
-    container.action="#";
-    container.method="post";
+    let container=document.createElement("div");
+    // container.action="#";
+    // container.method="post";
 
     let sub_container1=document.createElement("div");
     let sub_container2=document.createElement("div");
@@ -111,7 +102,7 @@ function insertForm(profile){
     let input3=document.createElement("input");
     input1.style.marginLeft="5px";
 
-
+    container.setAttribute("class","form")
     title1.setAttribute("class","form_title");
     title2.setAttribute("class","form_title");
     title3.setAttribute("class","form_title");
@@ -129,8 +120,6 @@ function insertForm(profile){
     input1.type="date";
     input1.name="date";
     input1.placeholder="yyyy/mm/dd";
-    // input1.onfocus="(this.placeholder='')";
-    // input1.onchange="this.className=(this.value!=''?'has-value':'')";
     input1.required=true;
     input1.style.width="193px";
     input1.style.height="35px";
@@ -138,9 +127,9 @@ function insertForm(profile){
     input2.type="radio";
     input3.type="radio";
     input2.name="time";
-    input2.value="上半天";
+    input2.value="morning";
     input3.name="time";
-    input3.value="下半天";
+    input3.value="afternoon";
     input2.style.width="22px";
     input2.style.height="22px";
     input3.style.width="22px";
@@ -148,6 +137,8 @@ function insertForm(profile){
     input2.style.marginLeft="10px";
     input3.style.marginLeft="10px";
     text2.style.marginLeft="5px";
+
+    btn.onclick=function(){startBooking()};
 
     title1.appendChild(document.createTextNode("訂購導覽行程"));
     title2.appendChild(document.createTextNode("選擇日期:"));
@@ -230,11 +221,45 @@ function drawSlides(images){
     container.appendChild(next);
 }
 
-
+function startBooking(){
+    console.log("in functionx")
+    fetch("/api/user/auth").then((response) => { return response.json() }).then(function (auth) {
+        console.log(auth)
+        if (!auth) {
+            document.getElementById('id01').style.display = 'flex';
+        } else {
+            console.log("in else")
+            let date = document.querySelector('input[name="date"]').value;
+            let time = document.querySelector('input[name="time"]:checked').value;
+            console.log(date)
+            console.log(time)
+            fetch("/api/booking",
+                {
+                    method: "POST",
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type':'application/json',
+                    },
+                    body: JSON.stringify(
+                        {
+                            "attractionId":attraction_id,
+                            "date":date,
+                            "time":time,
+                            "price": 2000
+                        }),
+                }
+            ).then((res)=>{return res.json()}).then(function(result){
+                if(result.hasOwnProperty("ok")){
+                    window.location.replace("/booking");
+                }else{
+                    console.log(result["message"]);
+                }
+            });
+        }
+    })
+}
 
 // Request attracton info from api
-// url="http://52.37.59.29:3000/api/attraction/"+attraction_id;
-// url="http://127.0.0.1:3000/api/attraction/"+attraction_id;
 fetch("/api/attraction/"+attraction_id).then(function(res){
     return res.json();
 }).then(function(data){
@@ -252,115 +277,5 @@ fetch("/api/attraction/"+attraction_id).then(function(res){
         let distance2bottom=window.innerHeight-document.querySelector(".topnavground").scrollHeight-document.querySelector(".MainBackground").scrollHeight-104;
         document.querySelector(".mainframe").style.paddingBottom=distance2bottom.toString()+"px";
     }
-    footer=document.querySelector(".footer");
-    footer.style.visibility="visible";
+    showFooter();
 });
-
-// Get the Login/signup form
-var LoginForm = document.getElementById('id01');
-
-// When the user clicks anywhere outside of the LoginForm, close it
-window.onclick = function(event) {
-    if (event.target == LoginForm) {
-        LoginForm.style.display = "none";
-    }
-}
-
-
-function register(){
-    uname=document.getElementsByName("uname")[0].value;
-    email=document.getElementsByName("email")[1].value;
-    psw=document.getElementsByName("psw")[1].value;
-    data={"name":uname, "email":email, "password":psw};
-    console.log(data);
-
-    fetch("/api/user",
-        {
-            method:"POST",
-            headers:{
-                'Content-Type':'application/json',
-            },
-            body:JSON.stringify(data),
-        }
-    ).then(function(res){
-        return res.json();
-    }).then(function(result){
-        console.log(result);
-        if(result['ok']){
-            success_text="註冊成功!";
-            if(document.querySelectorAll("#id02 .LoginForm-content .form_text").length==1){
-                referenceNode=document.querySelector("#id02 .LoginForm-content .form_text");
-                parentNode=document.querySelector("#id02 .LoginForm-content .container");
-                newNode=document.createElement("div");
-                newNode.setAttribute("class","form_text");
-                newNode.appendChild(document.createTextNode(success_text));
-                parentNode.insertBefore(newNode,referenceNode);
-            }else{
-                document.querySelectorAll("#id02 .LoginForm-content .form_text")[0].textContent=success_text;
-            }
-        }
-        if(result['error']){
-            if(document.querySelectorAll("#id02 .LoginForm-content .form_text").length==1){
-                referenceNode=document.querySelector("#id02 .LoginForm-content .form_text");
-                parentNode=document.querySelector("#id02 .LoginForm-content .container");
-                newNode=document.createElement("div");
-                newNode.setAttribute("class","form_text");
-                newNode.appendChild(document.createTextNode(result["message"]));
-                parentNode.insertBefore(newNode,referenceNode);
-            }else{
-                document.querySelectorAll("#id02 .LoginForm-content .form_text")[0].textContent=result["message"];
-            }
-        }
-    });
-}
-
-function login(){
-    email=document.getElementsByName("email")[0].value;
-    psw=document.getElementsByName("psw")[0].value;
-    data={"email":email, "password":psw};
-
-    fetch("/api/user/auth",
-        {
-            method:"PUT",
-            headers:{
-                'Content-Type':'application/json',
-            },
-            body:JSON.stringify(data),
-        }
-    ).then(function(res){
-        return res.json();
-    }).then(function(result){
-        console.log(result);
-        if(result['ok']){
-            window.location.reload();
-        }
-        else if(result['error']){
-            console.log(result);
-            if(document.querySelectorAll("#id01 .LoginForm-content .form_text").length ==1){
-                referenceNode=document.querySelector("#id01 .LoginForm-content .form_text");
-                parentNode=document.querySelector("#id01 .LoginForm-content .container");
-                newNode=document.createElement("div");
-                newNode.setAttribute("class","form_text");
-                newNode.appendChild(document.createTextNode(result["message"]));
-                parentNode.insertBefore(newNode,referenceNode);
-            }else{
-                document.querySelectorAll("#id01 .LoginForm-content .form_text")[0].textContent=result["message"];
-            }
-        }
-    });
-}
-
-function logout(){
-    fetch("/api/user/auth",
-        {
-            method:"DELETE",
-        }
-    ).then(function(res){
-        return res.json();
-    }).then(function(result){
-        console.log(result);
-        if(result){
-            window.location.reload();
-        }
-    });
-}
