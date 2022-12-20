@@ -1,4 +1,5 @@
-
+let prime='';
+let page_data={"prime":"", "order":{"price":"","trip":{},"data":"","time":""}, "contact":{"name":"", "email":"", "phone":""}};
 fetch("/api/user/auth").then((res)=>{return res.json()})
 .then(function(auth){
     if(!auth){
@@ -17,26 +18,94 @@ fetch("/api/user/auth").then((res)=>{return res.json()})
                 footer_box.style.marginTop="45px";
 
             }else{
+                page_data["order"]["trip"]["attraction"] = data.data.attraction;
+                page_data["order"]["price"] = data.data.price;
+                page_data["order"]["data"] = data.data.date;
+                page_data["order"]["time"] = data.data.time;
                 render_booking_summary(username, data);
                 render_separator();
                 render_contact_payment(data);
                 showFooter()
 
-                card_info = document.getElementsByName("card-number")[0];
-                card_info.addEventListener('keyup', function (event) {
-                sanitizedValue=this.value.replace(/[^0-9]/gi, '');
-                let finalValue="";
-                let count=0;
-                for (let i = 0; i < sanitizedValue.length;i++){
-                    finalValue=finalValue+sanitizedValue[i];
-                    if((i+1)%4===0 & (count+1)!==this.maxLength){
-                        finalValue=finalValue+" ";
-                        count++;
+                // card_info = document.getElementsByName("card-number")[0];
+                // card_info.addEventListener('keyup', function (event) {
+                // sanitizedValue=this.value.replace(/[^0-9]/gi, '');
+                // let finalValue="";
+                // let count=0;
+                // for (let i = 0; i < sanitizedValue.length;i++){
+                //     finalValue=finalValue+sanitizedValue[i];
+                //     if((i+1)%4===0 & (count+1)!==this.maxLength){
+                //         finalValue=finalValue+" ";
+                //         count++;
+                //     }
+                //     count++;
+                // }
+                // this.value=finalValue;
+                // }, false);
+
+                //TapPay
+                // import { TPDirect } from "https://js.tappaysdk.com/sdk/tpdirect/v5.14.0";
+                
+                TPDirect.setupSDK(126865, "app_iOcvyk9GjaA4Gfl4jyE1jnFhyyBETkthHT9wfFBh71Dbu1Gfksbfzrgtq7F2", "sandbox");
+                let fields = {
+                    number: { 
+                        element: '#card-number',
+                        placeholder: '**** **** **** ****'
+                     },
+                    expirationDate: { 
+                        element: '#card-expiration-date',
+                        placeholder: 'MM / YY'
+                     },
+                    ccv: { element: '#card-ccv',
+                        placeholder: 'CCV'
                     }
-                    count++;
                 }
-                this.value=finalValue;
-                }, false);
+                TPDirect.card.setup({
+                    fields: fields,
+                    styles: {
+                        'input': {
+                            // 'color': 'gray'
+                            'font-family': 'Noto Sans TC',
+                            'font-style': 'normal',
+                            'font-weight': '500',
+                            'font-size': '16px'
+                        },
+                        ':focus': { 'color': 'black' },
+                        '.valid': { 'color': 'green' },
+                        '.invalid': { 'color': 'red' },
+                    },
+                    // 此設定會顯示卡號輸入正確後，會顯示前六後四碼信用卡卡號
+                    isMaskCreditCardNumber: true,
+                    maskCreditCardNumberRange: {
+                        beginIndex: 6,
+                        endIndex: 11
+                    }
+                });
+
+                TPDirect.card.onUpdate(function (update) {
+                    const submitButton = document.querySelector('.confirm button');
+                    if (update.canGetPrime) {
+                        submitButton.removeAttribute('disabled')
+                    } else {
+                        submitButton.setAttribute('disabled', true)
+                    }
+
+                    /* Change card type display when card type change */
+                    /* ============================================== */
+
+                    // cardTypes = ['visa', 'mastercard', ...]
+                    // var newType = update.cardType === 'unknown' ? '' : update.cardType
+                    // $('#cardtype').text(newType)
+
+                    /* Change form-group style when tappay field status change */
+                    /* ======================================================= */
+
+                });
+
+                button = document.querySelector(".confirm button");
+                button.addEventListener("click", function (event) { onSubmit(event) });
+                console.log(prime);
+
             }
 
 
@@ -45,7 +114,51 @@ fetch("/api/user/auth").then((res)=>{return res.json()})
 });
 
 
+
+
 //Functions:
+function onSubmit(event) {
+    event.preventDefault()
+    
+
+    // 取得 TapPay Fields 的 status
+    const tappayStatus = TPDirect.card.getTappayFieldsStatus()
+
+    // 確認是否可以 getPrime
+    if (tappayStatus.canGetPrime === false) {
+        console.log('can not get prime')
+        return
+    }
+    // Get prime
+    TPDirect.card.getPrime((result) => {
+        if (result.status !== 0) {
+            console.log('get prime error ' + result.msg)
+            return
+        }
+        console.log('get prime 成功, prime: ' + result.card.prime)
+        page_data["prime"]=result.card.prime;
+        page_data["contact"]["name"] = document.getElementsByName("contact-name")[0].value;
+        page_data["contact"]["email"] = document.getElementsByName("email")[0].value;
+        page_data["contact"]["phone"] = document.getElementsByName("phone")[0].value;
+        console.log(page_data)
+        fetch("/api/orders", {
+            method: "POST",
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(page_data),
+        }).then((res) => { return res.json() })
+        .then(function (data){
+            console.log(data);
+            window.location.replace("/thankyou?number="+data["data"]["number"]);
+        });
+        
+
+        // send prime to your server, to pay with Pay by Prime API .
+        // Pay By Prime Docs: https://docs.tappaysdk.com/tutorial/zh/back.html#pay-by-prime-api
+    })
+}
 
 function render_booking_summary(username,data){
     // Insert welcome words
@@ -113,17 +226,17 @@ function render_contact_payment(data){
                 
         <div class="form-row">
             <div class="input-title" >聯絡姓名:</div>
-            <input name="contact-name"/>
+            <input type="text" name="contact-name" required/>
         </div>
 
         <div class="form-row">
             <div class="input-title" >聯絡信箱:</div>
-            <input name="email"/>
+            <input type="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$"/ required>
         </div>
 
         <div class="form-row">
             <div class="input-title" >手機號碼:</div>
-            <input name="phone"/>
+            <input type="text"name="phone" pattern="pattern=/((?=(09))[0-9]{10})$/g" required/>
         </div>
 
         <div class="form-row">
@@ -140,17 +253,20 @@ function render_contact_payment(data){
         <div class="head-line">信用卡付款資訊</div>
         <div class="form-row">
             <div class="input-title" >卡片號碼:</div>
-            <input type="text" name="card-number" maxlength="19" name="credit-number" pattern="\d*" placeholder="**** **** **** ****" required/>
+            <div class="tpfield" id="card-number"></div>
+            <!--<input type="text" class="tpfield" id="card-number" name="card-number" maxlength="19"  pattern="\d*" placeholder="**** **** **** ****" required/>-->
         </div>
 
         <div class="form-row">
             <div class="input-title" >過期時間:</div>
-            <input type="text" name="exp-time" autocomplete="cc-exp" placeholder="MM / YY" required/>
+            <div class="tpfield" id="card-expiration-date"></div>
+            <!--<input type="text" class="tpfield" id="card-expiration-date" name="exp-time" autocomplete="cc-exp" placeholder="MM / YY" required/>-->
         </div>
 
         <div class="form-row">
             <div class="input-title" >驗證密碼:</div>
-            <input type="password" name="verif-code" minlength="3" pattern="[0-9]+" placeholder="CVV" required/>
+            <div class="tpfield" id="card-ccv"></div>
+            <!--<input type="password" class="tpfield" id="card-ccv" name="verif-code" minlength="3" pattern="[0-9]+" placeholder="CCV" required/>-->
         </div>
     `;
     frame.appendChild(payment_content);
@@ -178,4 +294,19 @@ function deleteBooking(){
             window.location.reload();
         }
     });
+}
+
+function setNumberFormGroupToError(selector) {
+    $(selector).addClass('has-error')
+    $(selector).removeClass('has-success')
+}
+
+function setNumberFormGroupToSuccess(selector) {
+    $(selector).removeClass('has-error')
+    $(selector).addClass('has-success')
+}
+
+function setNumberFormGroupToNormal(selector) {
+    $(selector).removeClass('has-error')
+    $(selector).removeClass('has-success')
 }

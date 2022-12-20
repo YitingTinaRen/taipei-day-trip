@@ -11,6 +11,7 @@ cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(route.attraction_api, url_prefix="/")
 app.register_blueprint(route.account_api, url_prefix="/")
 app.register_blueprint(route.booking_api, url_prefix="/")
+app.register_blueprint(route.order_api, url_prefix="/")
 
 
 # Pages

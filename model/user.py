@@ -33,8 +33,7 @@ class USER:
             token=jwt.encode({
                 'userID':DB_result["member_id"],
                 'username':DB_result["username"],
-                'email':email,
-                'exp':datetime.utcnow()+timedelta(minutes=30)
+                'email':email
             },
             config.SECRET_KEY, algorithm=config.JWT_ALGO)
             

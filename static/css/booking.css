@@ -5,6 +5,12 @@ html, body{
 my-separator{
     width:100%;
 }
+login-form{
+    display:flex;
+}
+register-form {
+    display: flex;
+}
 .frame-container{
     display: flex;
     align-items: center;
@@ -156,6 +162,19 @@ input{
     padding:10px 10px 10px 10px;
 
 }
+.tpfield{
+    flex: none;
+    height: 18px;
+    width: 180px;
+    padding: 10px 10px 10px 10px;
+
+    /* White */
+    background: #FFFFFF;
+    /* Gray 300 */
+
+    border: 1px solid #E8E8E8;
+    border-radius: 5px;
+}
 .input-title{
     flex:none;
     height:24px;
@@ -204,7 +223,7 @@ input{
     right:0;
     top:0;
 }
-button{
+.confirm button{
     flex:none;
     width: 173px;
     height: 36px;
@@ -258,3 +277,22 @@ button{
     
 }
 
+/* tappay */
+.tappay-field-focus {
+    border-color: #66afe9;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
+}
+
+.has-error .tappay-field-focus {
+    border-color: #843534;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+}
+
+.has-success .tappay-field-focus {
+    border-color: #2b542c;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #67b168;
+}

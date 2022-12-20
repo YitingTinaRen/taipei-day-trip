@@ -86,6 +86,24 @@ TABLES['booking']=(
     "foreign key(`attraction_id`) references `attractions` (`id`) on delete cascade on update cascade"
     ") ENGINE=InnoDB")
 
+TABLES['orders']=(
+    "CREATE TABLE `orders` ("
+    "`order_id` bigint not null auto_increment primary key,"
+    "`booking_id` bigint not null,"
+    "`order_num` varchar(20) not null,"
+    "`transaction_status` int(10) not null,"
+    "`transaction_msg` varchar(300) default null,"
+    "`rec_trade_id` varchar(20) default null,"
+    "`bank_transaction_id` varchar(40) not null,"
+    "`bank_result_code` varchar(20) not null,"
+    "`bank_result_msg` varchar(300) default null,"
+    "`card_last_four` varchar(4) default null,"
+    "`amount` bigint not null,"
+    "`currency` varchar(3) not null,"
+    "`phone` varchar(10) not null,"
+    "foreign key(`booking_id`) references `booking` (`booking_id`) on delete cascade on update cascade"
+    ") ENGINE=InnoDB")
+
 
 # Connect to database
 DB_NAME="TaipeiDayTrip"

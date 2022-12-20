@@ -178,7 +178,7 @@
     line-height: 16px;
 }
 
-button:hover {
+.container button:hover {
     opacity: 0.8;
 }
 
