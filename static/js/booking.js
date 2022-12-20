@@ -135,12 +135,10 @@ function onSubmit(event) {
             console.log('get prime error ' + result.msg)
             return
         }
-        console.log('get prime 成功, prime: ' + result.card.prime)
         page_data["prime"]=result.card.prime;
         page_data["contact"]["name"] = document.getElementsByName("contact-name")[0].value;
         page_data["contact"]["email"] = document.getElementsByName("email")[0].value;
         page_data["contact"]["phone"] = document.getElementsByName("phone")[0].value;
-        console.log(page_data)
         fetch("/api/orders", {
             method: "POST",
             credentials: 'same-origin',

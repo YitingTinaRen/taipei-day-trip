@@ -19,14 +19,14 @@ class orders:
             return jsonify({"error": True, "message": "User name and email conflict with contact information."}), 400
         elif not re.match(r'09\d{8}', data["contact"]["phone"]):
             return jsonify({"error": True, "message": "Wrong phone format."}), 400
-        elif not re.match(r'[^@]+@[^@]+\.[^@]+', email):
+        elif not re.match(r'[^@]+@[^@]+\.[^@]+', data["contact"]["email"]):
             return jsonify({"error": True, "message": "Invalid email."}), 400
 
         # create order number and bank transaction id
         orderNum = orders.create_order_num()
         bank_trans_id= orders.create_bank_transaction_id()
 
-        res=ordxers.pay_by_prime(data, bank_trans_id, orderNum)
+        res=orders.pay_by_prime(data, bank_trans_id, orderNum)
 
         booking_info = model.db.check_booking(token_info["data"]["id"])
         booking_id = booking_info[0]["booking_id"]

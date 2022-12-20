@@ -14,25 +14,34 @@ def orders():
 @order_api.route("api/order/<orderNumber>", methods=["GET"])
 def getOrderNumber(orderNumber):
     token = request.cookies.get("user")
+    if not token:
+        return jsonify({"error":True, "message":"User not logs in."}), 403
     auth=model.USER.auth(token)
+    auth=json.loads(auth[0].data)
+    print(auth)
     if "error" in auth:
         return jsonify({"error":True,"message":auth["message"]}), 403
+    
     result=model.db.get_order_by_orderNum(orderNumber)
-    return jsonify({"data":{"number":result[0]["order_num"],
-            "price":result[0]["price"],"trip":{
-                "attraction":{
-                    "id":result[0]["id"],
-                    "name":result[0]["name"],
-                    "address":result[0]["address"],
-                    "image":result[0]["images"]
+    print(result)
+    if result:
+        return jsonify({"data":{"number":result[0]["order_num"],
+                "price":result[0]["price"],"trip":{
+                    "attraction":{
+                        "id":result[0]["id"],
+                        "name":result[0]["name"],
+                        "address":result[0]["address"],
+                        "image":result[0]["images"]
+                    },
+                    "date": f'{result[0]["date"]:%Y-%m-%d}',
+                    "time":result[0]["time"]
                 },
-                "date": f'{result[0]["date"]:%Y-%m-%d}',
-                "time":result[0]["time"]
-            },
-            "contact":{
-                "name":result[0]["username"],
-                "email": result[0]["email"],
-                "phone":result[0]["phone"]
-            },
-            "status":result[0]["transaction_status"]
-        }}),200
+                "contact":{
+                    "name":result[0]["username"],
+                    "email": result[0]["email"],
+                    "phone":result[0]["phone"]
+                },
+                "status":result[0]["transaction_status"]
+            }}),200
+    else:
+        return jsonify(None), 200
