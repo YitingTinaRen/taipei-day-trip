@@ -1,4 +1,4 @@
-import model.db as db
+import model
 from flask import jsonify
 
 NumInOnePage=12
@@ -11,7 +11,7 @@ class attraction:
     def urls(list):
         # put image urls into attraction list
         for i in range(len(list)):
-            imgs=db.db.search_image_by_id(list[i]["id"])
+            imgs=model.db.search_image_by_id(list[i]["id"])
             imgs=attraction.list_dict2value_list(imgs, "images")
             list[i].update({"images":imgs})
 	
@@ -22,9 +22,9 @@ class attraction:
         # Search in mysql
         try:
             if keyword:
-                attractions=db.db.search_by_keyword(keyword,page, NumInOnePage)
+                attractions=model.db.search_by_keyword(keyword,page, NumInOnePage)
             else:
-                attractions=db.db.search_by_page(page,NumInOnePage)
+                attractions=model.db.search_by_page(page,NumInOnePage)
             
             # attractions=checkData(sql, val)
             if  len(attractions) ==0: # if serch result is empty
@@ -44,7 +44,7 @@ class attraction:
 
     def load_by_id(attractionId):
         try:
-            attractions=db.db.search_by_id(attractionId)
+            attractions=model.db.search_by_id(attractionId)
             if len(attractions) ==0: return jsonify({"error": True, "message": "ID does not exist."}), 400 # if serch result is empty
         except:
             return jsonify({"error":True, "message":"Server internal error."}), 500
@@ -57,7 +57,7 @@ class attraction:
 
     def load_categories():
         try:
-            attractions=db.db.search_catogories()
+            attractions=model.db.search_catogories()
         except:
             return jsonify({"error":True, "message":"Server internal error."}), 500 
         

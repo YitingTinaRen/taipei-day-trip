@@ -1,5 +1,5 @@
 from flask import *
-import model.user as user
+import model
 
 
 account_api = Blueprint('account_api', __name__)
@@ -12,7 +12,7 @@ def register():
     email=user_data["email"]
     psw=user_data["password"]
     
-    result= user.USER.register(username,email,psw)
+    result= model.USER.register(username,email,psw)
     return result
     
 @account_api.route("/api/user/auth", methods=["GET", "PUT", "DELETE"])
@@ -22,14 +22,14 @@ def auth():
         email=user_data["email"]
         password=user_data["password"]
 
-        result=user.USER.login(email, password)
+        result=model.USER.login(email, password)
         return result
     elif request.method=="GET":
         token=request.cookies.get("user")
-        result=user.USER.auth(token)
+        result=model.USER.auth(token)
         return result
     elif request.method=="DELETE":
-        result=user.USER.delete_token()
+        result=model.USER.delete_token()
         return result
 
 

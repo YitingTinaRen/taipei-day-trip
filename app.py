@@ -1,8 +1,6 @@
 from flask import *
 from flask_cors import CORS
-from route.attraction_api import attraction_api
-from route.account_api import account_api
-from route.booking_api import booking_api
+import route
 import config
 
 app=None
@@ -10,9 +8,10 @@ app=None
 app=Flask(__name__)
 app.config.from_object(config)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
-app.register_blueprint(attraction_api, url_prefix="/")
-app.register_blueprint(account_api, url_prefix="/")
-app.register_blueprint(booking_api, url_prefix="/")
+app.register_blueprint(route.attraction_api, url_prefix="/")
+app.register_blueprint(route.account_api, url_prefix="/")
+app.register_blueprint(route.booking_api, url_prefix="/")
+app.register_blueprint(route.order_api, url_prefix="/")
 
 
 # Pages

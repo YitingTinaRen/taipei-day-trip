@@ -1,5 +1,5 @@
 from flask import *
-import model.attraction as attraction
+import model
 
 attraction_api = Blueprint('attraction_api', __name__)
 
@@ -8,8 +8,7 @@ def api_attraction():
 	# Get parameters
 	page=request.args.get('page',0)
 	keyword=request.args.get('keyword')
-
-	result=attraction.attraction.load_attractions(page,keyword)
+	result = model.attraction.load_attractions(page, keyword)
 	return result
 
     
@@ -17,11 +16,11 @@ def api_attraction():
 @attraction_api.route("/api/attraction/<attractionId>")
 def api_attractionId(attractionId):
 	attractionId=int(attractionId)
-	result=attraction.attraction.load_by_id(attractionId)
+	result=model.attraction.load_by_id(attractionId)
 	return result
 
 
 @attraction_api.route("/api/categories", methods=["GET"])
 def api_categories():
-	result=attraction.attraction.load_categories()
+	result=model.attraction.load_categories()
 	return result

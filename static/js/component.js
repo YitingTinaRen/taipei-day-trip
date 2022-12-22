@@ -13,7 +13,6 @@ fetch("/api/user/auth").then((response) => { return response.json() }).then(func
 
 function booking(){
     fetch("/api/user/auth").then((response) => { return response.json() }).then(function (auth) {
-        console.log(auth)
         if(!auth){
             document.getElementById('id01').style.display = 'flex';
         }else{
@@ -55,6 +54,16 @@ customElements.define('nav-bar', NAVBAR);
 window.onclick = function (event) {
     if (event.target.classList[0] == "LoginForm") {
         event.target.style.display = "none";
+        msgs = document.querySelectorAll("#msg");
+        if (msgs){
+            msgs[0].remove();
+            msgs[1].remove();
+        }
+        document.getElementsByName("uname")[0].value="";
+        document.getElementsByName("email")[0].value = "";
+        document.getElementsByName("email")[1].value = "";
+        document.getElementsByName("psw")[0].value = "";
+        document.getElementsByName("psw")[1].value = "";
     }
 }
 
@@ -84,8 +93,9 @@ function register() {
                 parentNode = document.querySelectorAll("#id02 .LoginForm-content .container");
                 newNode = document.createElement("div");
                 newNode.setAttribute("class", "form_text");
+                newNode.setAttribute("id", "msg");
                 newNode.appendChild(document.createTextNode(success_text));
-                parentNode.insertBefore(newNode, referenceNode);
+                parentNode[0].insertBefore(newNode, referenceNode);
             } else {
                 document.querySelectorAll("#id02 .LoginForm-content .form_text")[0].textContent = success_text;
             }
@@ -96,6 +106,7 @@ function register() {
                 parentNode = document.querySelector("#id02 .LoginForm-content .container");
                 newNode = document.createElement("div");
                 newNode.setAttribute("class", "form_text");
+                newNode.setAttribute("id", "msg");
                 newNode.appendChild(document.createTextNode(result["message"]));
                 parentNode.insertBefore(newNode, referenceNode);
             } else {
@@ -132,6 +143,7 @@ function login() {
                 parentNode = document.querySelector("#id01 .LoginForm-content .container");
                 newNode = document.createElement("div");
                 newNode.setAttribute("class", "form_text");
+                newNode.setAttribute("id", "msg");
                 newNode.appendChild(document.createTextNode(result["message"]));
                 parentNode.insertBefore(newNode, referenceNode);
             } else {

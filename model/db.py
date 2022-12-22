@@ -1,5 +1,6 @@
 import mysql.connector
 import config
+from mysql.connector import errorcode
 
 
 # MySQL Database config
@@ -50,7 +51,8 @@ class db:
             mycursor.close()
             mydb.close()
             return True
-        except:
+        except mysql.connector.Error as err:
+            print("Failed creating database: {}".format(err))
             return False
 
     def search_image_by_id(id):
@@ -105,7 +107,7 @@ class db:
         return result
 
     def check_booking(id):
-        sql = "select attractions.id, attractions.name, attractions.address, imgURL.images, booking.date, booking.time, booking.price "\
+        sql = "select attractions.id, attractions.name, attractions.address, imgURL.images, booking.date, booking.time, booking.price, booking.booking_id "\
             "from booking "\
             "inner join attractions "\
             "on attractions.id = booking.attraction_id "\
@@ -133,10 +135,47 @@ class db:
         result = db.writeData(sql, val)
         return result
 
+    def confirm_booking(user_id):
+        sql = "update booking set confirmation = True where member_id=%s"
+        val = (user_id,)
+        result = db.writeData(sql, val)
+        return result
 
     def delete_booking(user_id):
         sql="delete from booking where member_id= %s"
         val=(user_id,)
         result=db.writeData(sql,val)
+        return result
+
+    def record_order(payment_response, booking_id, phone):
+        sql="insert into orders (booking_id, order_num, "\
+            "transaction_status, transaction_msg, rec_trade_id, "\
+            "bank_transaction_id, bank_result_code, bank_result_msg, "\
+            "card_last_four, amount, currency, phone) "\
+            "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (booking_id, payment_response["order_number"], 
+            payment_response["status"], payment_response["msg"], 
+            payment_response["rec_trade_id"], payment_response["bank_transaction_id"], 
+            payment_response["bank_result_code"], payment_response["bank_result_msg"], 
+            payment_response["card_info"]["last_four"], payment_response["amount"], 
+            payment_response["currency"], phone)
+        result = db.writeData(sql, val)
+        return result
+
+    def get_order_by_orderNum(orderNum):
+        sql = "select orders.order_num, booking.price, attractions.id, attractions.name, attractions.address, imgURL.images, booking.date, booking.time, member.username, member.email, orders.phone, orders.transaction_status "\
+            "from orders "\
+            "inner join booking "\
+            "on orders.booking_id= booking.booking_id "\
+            "inner join attractions "\
+            "on booking.attraction_id=attractions.id "\
+            "inner join imgURL "\
+            "on imgURL.id = attractions.id "\
+            "inner join member "\
+            "on member.member_id=booking.member_id "\
+            "where orders.order_num=%s "\
+            "limit 1"
+        val=(orderNum,)
+        result = db.checkAllData(sql, val)
         return result
 
