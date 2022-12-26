@@ -1,5 +1,5 @@
 let prime='';
-let page_data={"prime":"", "order":{"price":"","trip":{},"data":"","time":""}, "contact":{"name":"", "email":"", "phone":""}};
+let page_data={};
 fetch("/api/user/auth").then((res)=>{return res.json()})
 .then(function(auth){
     if(!auth){
@@ -18,10 +18,8 @@ fetch("/api/user/auth").then((res)=>{return res.json()})
                 footer_box.style.marginTop="45px";
 
             }else{
-                page_data["order"]["trip"]["attraction"] = data.data.attraction;
-                page_data["order"]["price"] = data.data.price;
-                page_data["order"]["data"] = data.data.date;
-                page_data["order"]["time"] = data.data.time;
+                page_data=data.data;
+                console.log(page_data)
                 render_booking_summary(username, data);
                 render_separator();
                 render_contact_payment(data);
@@ -104,7 +102,6 @@ fetch("/api/user/auth").then((res)=>{return res.json()})
 
                 button = document.querySelector(".confirm button");
                 button.addEventListener("click", function (event) { onSubmit(event) });
-                console.log(prime);
 
             }
 

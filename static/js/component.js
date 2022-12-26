@@ -34,6 +34,9 @@ class NAVBAR extends HTMLElement{
                     <div class="RightItem1" onclick="booking()">
                         預定行程
                     </div>
+                    <div class="RightItem1" onclick="window.location.assign('/member')">
+                        歷史訂單
+                    </div>
                     <div class="RightItem2" onclick="document.getElementById('id01').style.display='flex'">
                         登入/註冊
                     </div>

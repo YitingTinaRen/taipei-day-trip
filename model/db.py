@@ -142,7 +142,7 @@ class db:
         return result
 
     def delete_booking(user_id):
-        sql="delete from booking where member_id= %s"
+        sql="delete from booking where member_id= %s and confirmation = False"
         val=(user_id,)
         result=db.writeData(sql,val)
         return result
@@ -178,4 +178,35 @@ class db:
         val=(orderNum,)
         result = db.checkAllData(sql, val)
         return result
+
+    def get_member_order(member_id):
+        sql = "select DATE_FORMAT(booking.date, '%Y-%m-%d') as date, booking.time, "\
+            "booking.price, booking.booking_id, attractions.id, attractions.name, "\
+            "attractions.address, imgURL.images, orders.order_num "\
+            "from booking "\
+            "inner join orders "\
+            "on orders.booking_id = booking.booking_id "\
+            "inner join attractions "\
+            "on booking.attraction_id=attractions.id "\
+            "inner join imgURL "\
+            "on imgURL.url_id=(select url_id from imgURL where id=attractions.id limit 1) "\
+            "where member_id=%s"
+        val=(member_id,)
+        result = db.checkAllData(sql, val)
+        return result
+
+    def delete_order(booking_id, member_id):
+        sql="delete from booking where booking_id=%s and member_id=%s"
+        val=(booking_id, member_id,)
+        result=db.writeData(sql,val)
+        return result
+
+    def get_refund_id(booking_id):
+        sql="select rec_trade_id, amount from orders where booking_id=%s"
+        val=(booking_id,)
+        result=db.checkOneData(sql, val)
+        result=result["rec_trade_id"]
+        return result
+
+
 
