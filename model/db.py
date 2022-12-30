@@ -195,18 +195,48 @@ class db:
         result = db.checkAllData(sql, val)
         return result
 
-    def delete_order(booking_id, member_id):
-        sql="delete from booking where booking_id=%s and member_id=%s"
-        val=(booking_id, member_id,)
+    def delete_order(order_num, member_id):
+        sql="delete booking, orders from orders inner join booking on booking.booking_id=orders.booking_id and booking.member_id=%s where orders.order_num=%s"
+        val = (member_id, order_num,)
         result=db.writeData(sql,val)
         return result
 
-    def get_refund_id(booking_id):
-        sql="select rec_trade_id, amount from orders where booking_id=%s"
-        val=(booking_id,)
+    def get_refund_id(order_num):
+        sql = "select rec_trade_id, amount from orders where order_num=%s"
+        val = (order_num,)
         result=db.checkOneData(sql, val)
         result=result["rec_trade_id"]
         return result
 
+    def update_member(member_id, username, email,password):
+        if username:
+            sql="update member set username=%s where member_id=%s"
+            val=(username, member_id,)
+            result=db.writeData(sql, val)
+            return result
+        elif email:
+            sql = "update member set email=%s where member_id=%s"
+            val = (email, member_id,)
+            result = db.writeData(sql, val)
+            return result
+        elif password:
+            sql = "update member set password=%s where member_id=%s"
+            val = (password, member_id,)
+            result = db.writeData(sql, val)
+            return result
 
+    def uploadUserPic(member_id, file_path):
+        if db.loadUserPic(member_id):
+            sql = "update userPic set pic_path=%s where member_id=%s"
+        else:
+            sql="insert into userPic (pic_path, member_id) values (%s, %s)"
+        val=(file_path, member_id,)
+        result=db.writeData(sql,val)
+        return result
+
+    def loadUserPic(member_id):
+        sql="select pic_path from userPic where member_id =%s"
+        val=(member_id,)
+        result=db.checkOneData(sql,val)
+        return result
 

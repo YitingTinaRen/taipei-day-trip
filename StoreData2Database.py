@@ -104,6 +104,13 @@ TABLES['orders']=(
     "foreign key(`booking_id`) references `booking` (`booking_id`) on delete cascade on update cascade"
     ") ENGINE=InnoDB")
 
+TABLES["userPic"]=(
+    "CREATE TABLE `userPic` ("
+    "`pic_id` bigint not null auto_increment primary key,"
+    "`member_id` bigint not null unique,"
+    "`pic_path` varchar(255) not null,"
+    "foreign key(`member_id`) references `member` (`member_id`) on delete cascade on update cascade"
+    ") ENGINE=InnoDB")
 
 # Connect to database
 DB_NAME="TaipeiDayTrip"

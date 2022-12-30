@@ -133,7 +133,7 @@ function onSubmit(event) {
             return
         }
         page_data["prime"]=result.card.prime;
-        page_data["contact"]["name"] = document.getElementsByName("contact-name")[0].value;
+        page_data["contact"] = {"name":document.getElementsByName("contact-name")[0].value};
         page_data["contact"]["email"] = document.getElementsByName("email")[0].value;
         page_data["contact"]["phone"] = document.getElementsByName("phone")[0].value;
         fetch("/api/orders", {
@@ -142,7 +142,7 @@ function onSubmit(event) {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(page_data),
+            body: JSON.stringify(page_data),  
         }).then((res) => { return res.json() })
         .then(function (data){
             console.log(data);
