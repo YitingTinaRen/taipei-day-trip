@@ -142,7 +142,7 @@ class db:
         return result
 
     def delete_booking(user_id):
-        sql="delete from booking where member_id= %s"
+        sql="delete from booking where member_id= %s and confirmation = False"
         val=(user_id,)
         result=db.writeData(sql,val)
         return result
@@ -177,5 +177,66 @@ class db:
             "limit 1"
         val=(orderNum,)
         result = db.checkAllData(sql, val)
+        return result
+
+    def get_member_order(member_id):
+        sql = "select DATE_FORMAT(booking.date, '%Y-%m-%d') as date, booking.time, "\
+            "booking.price, booking.booking_id, attractions.id, attractions.name, "\
+            "attractions.address, imgURL.images, orders.order_num "\
+            "from booking "\
+            "inner join orders "\
+            "on orders.booking_id = booking.booking_id "\
+            "inner join attractions "\
+            "on booking.attraction_id=attractions.id "\
+            "inner join imgURL "\
+            "on imgURL.url_id=(select url_id from imgURL where id=attractions.id limit 1) "\
+            "where member_id=%s"
+        val=(member_id,)
+        result = db.checkAllData(sql, val)
+        return result
+
+    def delete_order(order_num, member_id):
+        sql="delete booking, orders from orders inner join booking on booking.booking_id=orders.booking_id and booking.member_id=%s where orders.order_num=%s"
+        val = (member_id, order_num,)
+        result=db.writeData(sql,val)
+        return result
+
+    def get_refund_id(order_num):
+        sql = "select rec_trade_id, amount from orders where order_num=%s"
+        val = (order_num,)
+        result=db.checkOneData(sql, val)
+        result=result["rec_trade_id"]
+        return result
+
+    def update_member(member_id, username, email,password):
+        if username:
+            sql="update member set username=%s where member_id=%s"
+            val=(username, member_id,)
+            result=db.writeData(sql, val)
+            return result
+        elif email:
+            sql = "update member set email=%s where member_id=%s"
+            val = (email, member_id,)
+            result = db.writeData(sql, val)
+            return result
+        elif password:
+            sql = "update member set password=%s where member_id=%s"
+            val = (password, member_id,)
+            result = db.writeData(sql, val)
+            return result
+
+    def uploadUserPic(member_id, file_path):
+        if db.loadUserPic(member_id):
+            sql = "update userPic set pic_path=%s where member_id=%s"
+        else:
+            sql="insert into userPic (pic_path, member_id) values (%s, %s)"
+        val=(file_path, member_id,)
+        result=db.writeData(sql,val)
+        return result
+
+    def loadUserPic(member_id):
+        sql="select pic_path from userPic where member_id =%s"
+        val=(member_id,)
+        result=db.checkOneData(sql,val)
         return result
 

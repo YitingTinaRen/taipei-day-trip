@@ -37,7 +37,7 @@ class orders:
         else:
             return jsonify({"error":True, "message":"伺服器內部錯誤"}), 500
 
-    def create_order_num():
+    def create_order_num():  
         # create order number from time
         now = datetime.now()
         orderNum = datetime.strftime(now, '%Y%m%d%H%M%S%f')
@@ -49,6 +49,7 @@ class orders:
         return "B"+bank_trans_id
     
     def pay_by_prime(data,bank_transaction_id, order_num):
+        print(data)
         url = 'https://sandbox.tappaysdk.com/tpc/payment/pay-by-prime'
         Headers = {"Content-Type": 'application/json',
                    'x-api-key': 'partner_qYMTbDi8hZm1fB3UkHDG3FOQHZ5QWZGfRMwndUE7HdMBJ5yLuYk6kBFV'
@@ -57,7 +58,7 @@ class orders:
             "partner_key": "partner_qYMTbDi8hZm1fB3UkHDG3FOQHZ5QWZGfRMwndUE7HdMBJ5yLuYk6kBFV",
             "prime": data["prime"],
             # "prime": "test_3a2fb2b7e892b914a03c95dd4dd5dc7970c908df67a49527c0a648b2bc9",
-            "amount": data["order"]["price"],
+            "amount": data["price"],
             "merchant_id": "yiting2022_CTBC",
             "details": "TaipeiDayTrip",
             "bank_transaction_id": bank_transaction_id,
@@ -68,6 +69,48 @@ class orders:
 
             },
             "order_number": order_num
+        }
+
+        res = requests.post(url, headers=Headers, data=json.dumps(payload))
+        res = res.json()
+        return res
+
+    def check_order(token):
+        token_info = model.USER.auth(token)
+        token_info = json.loads(token_info[0].data)
+        if "error" in token_info:
+            return jsonify({"error": True, "message": token_info["message"]}), 403
+        
+        result=model.db.get_member_order(token_info["data"]["id"])
+        return jsonify(result), 200
+
+    def delete_order(token, order_num):
+        token_info = model.USER.auth(token)
+        token_info = json.loads(token_info[0].data)
+        if "error" in token_info:
+            return jsonify({"error": True, "message": token_info["message"]}), 403
+        
+        rec_trade_id = model.db.get_refund_id(order_num)
+        print(rec_trade_id)
+        refundResult=orders.tapPayRefund(rec_trade_id)
+        print(refundResult)
+
+        result = model.db.delete_order(order_num, token_info["data"]["id"])
+        if result and refundResult["status"] ==0:
+            return jsonify({"ok":True}), 200
+        elif refundResult['status'] !=0:
+            return jsonify({"error":True, "message":refundResult["msg"]}), 500
+        elif not result:
+            return jsonify({"error":True, "message":"Database issue"}), 500
+
+    def tapPayRefund(rec_trade_id):
+        url = 'https://sandbox.tappaysdk.com/tpc/transaction/refund'
+        Headers = {"Content-Type": 'application/json',
+                   'x-api-key': 'partner_qYMTbDi8hZm1fB3UkHDG3FOQHZ5QWZGfRMwndUE7HdMBJ5yLuYk6kBFV'
+                   }
+        payload = {
+            "partner_key": "partner_qYMTbDi8hZm1fB3UkHDG3FOQHZ5QWZGfRMwndUE7HdMBJ5yLuYk6kBFV",
+            "rec_trade_id":rec_trade_id
         }
 
         res = requests.post(url, headers=Headers, data=json.dumps(payload))

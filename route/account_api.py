@@ -5,15 +5,20 @@ import model
 account_api = Blueprint('account_api', __name__)
 
 
-@account_api.route("/api/user", methods=["POST"])
+@account_api.route("/api/user", methods=["POST", "PATCH"])
 def register():
-    user_data=request.get_json()
-    username=user_data["name"]
-    email=user_data["email"]
-    psw=user_data["password"]
-    
-    result= model.USER.register(username,email,psw)
-    return result
+    if request.method=="POST":
+        user_data = request.get_json()
+        username = user_data["name"]
+        email = user_data["email"]
+        psw = user_data["password"]
+        result= model.USER.register(username,email,psw)
+        return result
+    elif request.method=="PATCH":
+        token = request.cookies.get("user")
+        user_data = request.get_json()
+        result=model.USER.update_user_info(user_data,token)
+        return result
     
 @account_api.route("/api/user/auth", methods=["GET", "PUT", "DELETE"])
 def auth():

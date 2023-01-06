@@ -12,6 +12,7 @@ app.register_blueprint(route.attraction_api, url_prefix="/")
 app.register_blueprint(route.account_api, url_prefix="/")
 app.register_blueprint(route.booking_api, url_prefix="/")
 app.register_blueprint(route.order_api, url_prefix="/")
+app.register_blueprint(route.member_api, url_prefix="/")
 
 
 # Pages
@@ -27,6 +28,9 @@ def booking():
 @app.route("/thankyou")
 def thankyou():
 	return render_template("thankyou.html")
+@app.route("/member")
+def member():
+	return render_template("member.html")
 
 
 app.run(host=config.HOST, port=config.PORT, debug=config.DEBUG)

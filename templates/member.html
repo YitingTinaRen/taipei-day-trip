@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <title>Member Page</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/booking.css" />
+    <link rel="stylesheet" type="text/css" href="/static/css/component.css" />
+    <script src="/static/js/component.js"></script>
+    <script src="/static/js/member.js"></script>
+
+</head>
+
+<body>
+    <nav-bar></nav-bar>
+    <my-separator></my-separator>
+    <div class="frame-container">
+    
+    
+        <div class="frame">
+    
+    
+        </div>
+        <login-form></login-form>
+        <register-form></register-form>
+    </div>
+
+    <my-footer></my-footer>
+
+    <!-- Change member info form -->
+    <div id="id05" class="LoginForm">
+        <div class="LoginForm-content animate">
+            <div class="colorbar"></div>
+            <span onclick="document.getElementById('id05').style.display='none'" class="close" title="Close LoginForm"><img
+                    src="/static/imgs/icon_close.png/" style="width:16px;height:16px;" class="close-icon"></span>
+    
+            <div class="container">
+                <div class="form_title">會員資料更改</div>
+                <input type="text" id="1" placeholder="新姓名" name="usrname" style="display:none;" required>
+                <input type="text" id="2" placeholder="新信箱" name="email" style="display:none;" required>
+                <input type="text" id="3" placeholder="舊密碼" name="oldPsw" style="display:none;" required>
+                <input type="text" id="4" placeholder="新姓名" name="newPsw" style="display:none;" required>
+                <button type="submit" onclick="updateNewMemberInfo()">確定更改</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="id06" class="LoginForm">
+        <div class="LoginForm-content animate" style="display:flex;max-width:1200px;width:90%;justify-content:center;align-items:center;flex-wrap:wrap;flex-direction:column;padding-top:10px;margin:0px;">
+
+        </div>
+    </div>
+
+</body>
+<!-- <script src="/static/js/thankyou.js"></script> -->
+
+
+</html>

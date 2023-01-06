@@ -116,3 +116,65 @@ class USER:
             return jsonify({"ok": True}), 200
         else:
             return jsonify({"error": True, "message": "Server internal error"}), 500
+
+    def update_user_info(data, token):
+        if not token:
+            return jsonify({"error": True, "message": "User not log in."}), 403
+
+        user_data = USER.auth(token)
+        user_data = json.loads(user_data[0].data)
+        if data["username"]:
+            if data["username"] == user_data["data"]["name"]:
+                return jsonify({"error": True, "message": "New name is the same as the old name."}), 400
+            
+            result=model.db.update_member(user_data["data"]["id"], data["username"],data["email"], data["newPsw"])
+            # Create JWT token
+            token = jwt.encode({
+                'userID': user_data["data"]["id"],
+                'username': data["username"],
+                'email': user_data["data"]["email"]
+            },
+                config.SECRET_KEY, algorithm=config.JWT_ALGO)
+
+            # Save to cookie
+            res = make_response(
+                jsonify({"ok": True, "message": "更新成功"}), 200)
+            res.set_cookie('user', token)
+            return res
+            
+        if data["email"]:
+            if not re.match(r'[^@]+@[^@]+\.[^@]+', data["email"]):
+                return jsonify({"error":True, "message": "Invalid email."}), 400
+            elif model.db.search_member_by_email(data["email"]):
+                return jsonify({"error": True, "message": "Email already exists."}), 400
+            else:
+                result = model.db.update_member(
+                    user_data["data"]["id"], data["username"], data["email"], data["newPsw"])
+                # Create JWT token
+                token = jwt.encode({
+                    'userID': user_data["data"]["id"],
+                    'username': user_data["data"]["name"],
+                    'email': data["email"]
+                },
+                    config.SECRET_KEY, algorithm=config.JWT_ALGO)
+
+                # Save to cookie
+                res = make_response(
+                    jsonify({"ok": True, "message": "更新成功"}), 200)
+                res.set_cookie('user', token)
+                return res
+
+        if data["oldPsw"] and data["newPsw"]:
+            if data["oldPsw"] == data["newPsw"]:
+                return jsonify({"error": True, "message": "New password is the same as the old one."}), 400
+            
+            memberInfoDB=model.db.search_member_by_email(user_data["data"]["email"])
+            if not memberInfoDB:
+                return jsonify({"error":True, "message":"舊密碼錯誤"}),400
+            
+            if memberInfoDB["password"] == data["oldPsw"]:
+                result = model.db.update_member(
+                    user_data["data"]["id"], data["username"], data["email"], data["newPsw"])
+                return  jsonify({"ok":result, "message":"更新成功"}), 200
+            else:
+                return jsonify({"error":True, "message":"舊密碼錯誤"}),400
