@@ -1,1 +1,37 @@
 # taipei-day-trip
+This is a travel e-commerce website that uses a front-end and back-end separation architecture, designed according to RESTful API, and integrates payment services.
+#### Web link:[http://34.210.64.209:3000](http://34.210.64.209:3000)
+
+## Demo
+#### Home page
+<img src="SomeImgs/HomePage.gif" width="480px" height="270px">
+
+#### Book a itinerary
+<img src="SomeImgs/Booking.gif" width="480px" height="270px">
+
+#### Make an order
+<img src="SomeImgs/Ordering.gif" width="480px" height="270px">
+
+#### Member page
+<img src="SomeImgs/Member.gif" width="480px" height="270px">
+
+## Features
+- RWD
+- Infinite scroll tourism loading.
+- Search tourist spots with implication keywords.
+- carousel imgage slider.
+- Travel itinerary booking.
+- Integrate Tap Pay payment system.
+- Check history orders in member page.
+- Change member information, upload member profile picture in member page.
+
+## Tech Stack
+- Client: HTML, CSS, JavaScript, Flexbox, RWD
+- Server: Python, Flask, MySQL, AWS EC2
+
+## Database Structure
+![MySQL DB](/SomeImgs/DB_Structure.png)
+- Use MySQL.
+- DB normalized in 3NF.
+- Foreign keys: attractions `id`, `booking_id`, `member_id`.
+
