@@ -9,7 +9,7 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 DB_HOST = os.getenv('DB_HOST')
 DB_DB = os.getenv('DB_DB')
 DB_POOL_NAME=os.getenv('DB_POOL_NAME')
-DB_POOL_SIZE=20
+DB_POOL_SIZE=10
 
 # Flask app configuration
 DEBUG = os.getenv('DEBUG')

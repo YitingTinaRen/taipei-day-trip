@@ -174,14 +174,18 @@ cursor = mydb.cursor()
 for item in data:
     # print(item.keys())
     # print(item["_id"])
-    cursor.execute(add_attractions, item)
-    mydb.commit()
-    imgurl=image_url(item["file"])
-    for url in imgurl:
-        cursor.execute(add_imgURL, {"_id": item["_id"], "file":url})
-        mydb.commit()
-        
 
+    try:
+        cursor.execute(add_attractions, item)
+        mydb.commit()
+        imgurl=image_url(item["file"])
+        for url in imgurl:
+            cursor.execute(add_imgURL, {"_id": item["_id"], "file":url})
+            mydb.commit()
+    except mysql.connector.Error as err:
+        print("Failed insert data: {}".format(err))
+        
+print(type(item))
 cursor.close()
 mydb.close()
 
