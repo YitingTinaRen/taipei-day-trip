@@ -1,4 +1,4 @@
-# taipei-day-trip
+# Taipei-Day-Trip
 This is a travel e-commerce website that uses a front-end and back-end separation architecture, designed according to RESTful API, and integrates payment services.
 #### Web link:[http://34.210.64.209:3000](http://34.210.64.209:3000)
 
