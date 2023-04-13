@@ -4,24 +4,22 @@ import mysql.connector
 from mysql.connector import errorcode
 
 
-
-
 def image_url(urlstr):
-    imgurl=urlstr.split("https://")# split the string in the file
-    imgurl.remove("")# remove empty string in the list
-    imgurl=["https://" +item for item in imgurl]
+    imgurl = urlstr.split("https://")  # split the string in the file
+    imgurl.remove("")  # remove empty string in the list
+    imgurl = ["https://" + item for item in imgurl]
     # print(imgurl)
     return imgurl
 
 
-abs_path=os.path.dirname(os.path.abspath(__file__))
-relative_path="data/taipei-attractions.json"
-full_path=os.path.join(abs_path, relative_path)
-f=open(full_path, 'r')
+abs_path = os.path.dirname(os.path.abspath(__file__))
+relative_path = "data/taipei-attractions.json"
+full_path = os.path.join(abs_path, relative_path)
+f = open(full_path, 'r')
 
-data=json.load(f)
+data = json.load(f)
 f.close()
-data=data["result"]["results"]
+data = data["result"]["results"]
 # cols=data[0].keys()
 # print(cols)
 # print(type(cols))
@@ -30,7 +28,7 @@ data=data["result"]["results"]
 # sql="insert into %s(%s) values(%s)"
 
 # Define tables
-TABLES={}
+TABLES = {}
 TABLES['attractions'] = (
     "CREATE TABLE `attractions` ("
     "  `rate` int not null,"
@@ -65,7 +63,7 @@ TABLES['imgURL'] = (
     "  CONSTRAINT `imgURL_ibfk_1` FOREIGN KEY (`id`) REFERENCES `attractions` (`id`) ON DELETE CASCADE "
     ") ENGINE=InnoDB")
 
-TABLES['member']=(
+TABLES['member'] = (
     "CREATE TABLE `member` ("
     "`member_id` bigint not null auto_increment primary key,"
     "`username` varchar(255) not null,"
@@ -73,7 +71,7 @@ TABLES['member']=(
     "`password` varchar(255) not null"
     ") ENGINE=InnoDB")
 
-TABLES['booking']=(
+TABLES['booking'] = (
     "CREATE TABLE `booking` ("
     "`booking_id` bigint not null auto_increment primary key,"
     "`member_id` bigint not null,"
@@ -86,7 +84,7 @@ TABLES['booking']=(
     "foreign key(`attraction_id`) references `attractions` (`id`) on delete cascade on update cascade"
     ") ENGINE=InnoDB")
 
-TABLES['orders']=(
+TABLES['orders'] = (
     "CREATE TABLE `orders` ("
     "`order_id` bigint not null auto_increment primary key,"
     "`booking_id` bigint not null,"
@@ -104,7 +102,7 @@ TABLES['orders']=(
     "foreign key(`booking_id`) references `booking` (`booking_id`) on delete cascade on update cascade"
     ") ENGINE=InnoDB")
 
-TABLES["userPic"]=(
+TABLES["userPic"] = (
     "CREATE TABLE `userPic` ("
     "`pic_id` bigint not null auto_increment primary key,"
     "`member_id` bigint not null unique,"
@@ -113,14 +111,15 @@ TABLES["userPic"]=(
     ") ENGINE=InnoDB")
 
 # Connect to database
-DB_NAME="TaipeiDayTrip"
-mydb=mysql.connector.connect(
+DB_NAME = "TaipeiDayTrip"
+mydb = mysql.connector.connect(
     host="localhost",
     user="root",
     password="0000",
 )
 
-cursor=mydb.cursor()
+cursor = mydb.cursor()
+
 
 def create_database(cursor):
     try:
@@ -129,6 +128,7 @@ def create_database(cursor):
     except mysql.connector.Error as err:
         print("Failed creating database: {}".format(err))
         exit(1)
+
 
 try:
     cursor.execute("USE {}".format(DB_NAME))
@@ -160,11 +160,12 @@ for table_name in TABLES:
 cursor.close()
 
 # Insert Data
-add_attractions=("INSERT INTO attractions "
-              "(rate, transport, name, date, lng, REF_WP, avBegin, langinfo, mrt, SERIAL_NO, RowNumber, category, MEMO_TIME, POI, idpt, lat, description, id, avEnd, address) "
-              "VALUES (%(rate)s, %(direction)s, %(name)s, %(date)s, %(longitude)s, %(REF_WP)s, %(avBegin)s, %(langinfo)s, %(MRT)s, %(SERIAL_NO)s, %(RowNumber)s, %(CAT)s, %(MEMO_TIME)s, %(POI)s, %(idpt)s, %(latitude)s, %(description)s, %(_id)s, %(avEnd)s, %(address)s)")
+add_attractions = (
+    "INSERT INTO attractions "
+    "(rate, transport, name, date, lng, REF_WP, avBegin, langinfo, mrt, SERIAL_NO, RowNumber, category, MEMO_TIME, POI, idpt, lat, description, id, avEnd, address) "
+    "VALUES (%(rate)s, %(direction)s, %(name)s, %(date)s, %(longitude)s, %(REF_WP)s, %(avBegin)s, %(langinfo)s, %(MRT)s, %(SERIAL_NO)s, %(RowNumber)s, %(CAT)s, %(MEMO_TIME)s, %(POI)s, %(idpt)s, %(latitude)s, %(description)s, %(_id)s, %(avEnd)s, %(address)s)")
 
-add_imgURL=("INSERT INTO imgURL"
+add_imgURL = ("INSERT INTO imgURL"
               "(id, images) "
               "VALUES (%(_id)s, %(file)s)")
 
@@ -178,15 +179,13 @@ for item in data:
     try:
         cursor.execute(add_attractions, item)
         mydb.commit()
-        imgurl=image_url(item["file"])
+        imgurl = image_url(item["file"])
         for url in imgurl:
-            cursor.execute(add_imgURL, {"_id": item["_id"], "file":url})
+            cursor.execute(add_imgURL, {"_id": item["_id"], "file": url})
             mydb.commit()
     except mysql.connector.Error as err:
         print("Failed insert data: {}".format(err))
-        
+
 print(type(item))
 cursor.close()
 mydb.close()
-
-

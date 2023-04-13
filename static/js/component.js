@@ -93,7 +93,7 @@ function register() {
     email = document.getElementsByName("email")[1].value;
     psw = document.getElementsByName("psw")[1].value;
     data = { "name": uname, "email": email, "password": psw };
-    console.log(data);
+    // console.log(data);
 
     fetch("/api/user",
         {
