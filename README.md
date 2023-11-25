@@ -1,6 +1,7 @@
 # Taipei-Day-Trip
 This is a travel e-commerce website that uses a front-end and back-end separation architecture, designed according to RESTful API, and integrates payment services.
-#### Web link:[http://34.210.64.209:3000](http://34.210.64.209:3000)
+#### Web link:[https://starfruit8106.synology.me:3001/](https://starfruit8106.synology.me:3001/)
+(Change to put the web onto the synology server for cost concern)
 
 ## Demo
 #### Home page
@@ -27,7 +28,7 @@ This is a travel e-commerce website that uses a front-end and back-end separatio
 
 ## Tech Stack
 - Client: HTML, CSS, JavaScript, Flexbox, RWD
-- Server: Python, Flask, MySQL, AWS EC2
+- Server: Python, Flask, MySQL, AWS EC2, Synology NAS
 
 ## Database Structure
 ![MySQL DB](/SomeImgs/DB_Structure.png)
