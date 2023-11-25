@@ -49,10 +49,20 @@ body {
     border: none;
 }
 
-@media (min-width: 600px) {
+@media (max-width: 600px) {
 
     .button-left,
     .button-right {
         width: 30%;
+    }
+}
+
+@media (max-width: 370px) {
+
+    .button-left,
+    .button-right {
+        display: block;
+        width: 80%;
+        margin: 10px auto;
     }
 }
