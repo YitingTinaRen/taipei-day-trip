@@ -2,15 +2,35 @@ body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 20px;
-    font-weight: 300;
-    font-size: 16px;
+    font-weight: 400;
+    font-size: 20px;
 }
 
-button {
-    display: block;
-    width: 80%;
-    margin: 10px auto;
-    padding: 10px;
+.button-left {
+    display: inline-block;
+    /* Change from block to inline-block */
+    width: 30%;
+    /* Adjusted width to fit two buttons in a row */
+    margin: 10px 2% 10px 8%;
+    /* top right bottom left */
+    /* Adjusted margin for spacing between buttons */
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button-right {
+    display: inline-block;
+    /* Change from block to inline-block */
+    width: 30%;
+    /* Adjusted width to fit two buttons in a row */
+    margin: 10px 8% 10px 2%;
+    /* top right bottom left */
+    /* Adjusted margin for spacing between buttons */
+    padding: 15px;
     background-color: #4CAF50;
     color: white;
     border: none;
@@ -23,16 +43,16 @@ button {
     width: 80%;
     margin: 10px auto;
     padding: 10px;
-    font-size: 20px;
-    font-weight: 500;
+    font-size: 24px;
+    font-weight: 600;
     color: #4CAF50;
     border: none;
 }
 
 @media (min-width: 600px) {
 
-    button,
-    .header {
-        width: 50%;
+    .button-left,
+    .button-right {
+        width: 30%;
     }
 }
