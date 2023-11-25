@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 20px;
+    font-weight: 300;
+    font-size: 16px;
+}
+
+button {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.header {
+    display: block;
+    width: 80%;
+    margin: 10px auto;
+    padding: 10px;
+    font-size: 20px;
+    font-weight: 500;
+    color: #4CAF50;
+    border: none;
+}
+
+@media (min-width: 600px) {
+
+    button,
+    .header {
+        width: 50%;
+    }
+}

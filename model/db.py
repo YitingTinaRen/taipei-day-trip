@@ -8,7 +8,7 @@ dbconfig = {
     "host": config.DB_HOST,
     "user": config.DB_USER,
     "password": config.DB_PASSWORD,
-    "database": config.DB_DB
+    "database": config.DB_DB,
 }
 
 
@@ -16,13 +16,13 @@ dbconfig = {
 mydb = mysql.connector.connect(
     pool_name=config.DB_POOL_NAME,
     pool_size=config.DB_POOL_SIZE,
-    **dbconfig
+    auth_plugin="mysql_native_password",
+    **dbconfig,
 )
 mydb.close()
 
 
 class db:
-
     def checkAllData(sql, val=()):
         # return data type is dictionary
         mydb = mysql.connector.connect(pool_name=config.DB_POOL_NAME)
@@ -64,19 +64,29 @@ class db:
         return result
 
     def search_by_keyword(keyword, page, NumInOnePage):
-        ambig_keyword = '%' + keyword + '%'
-        sql = "select id, name, category, description, address, transport, mrt, lat, lng from attractions "\
-            "where (category= %s or name like %s) "\
-            "order by id asc "\
+        ambig_keyword = "%" + keyword + "%"
+        sql = (
+            "select id, name, category, description, address, transport, mrt, lat, lng from attractions "
+            "where (category= %s or name like %s) "
+            "order by id asc "
             "limit %s, %s"
-        val = (keyword, ambig_keyword, page * NumInOnePage, NumInOnePage + 1,)
+        )
+        val = (
+            keyword,
+            ambig_keyword,
+            page * NumInOnePage,
+            NumInOnePage + 1,
+        )
 
         result = db.checkAllData(sql, val)
         return result
 
     def search_by_page(page, NumInOnePage):
         sql = "select id, name, category, description, address, transport, mrt, lat, lng from attractions order by id asc limit %s, %s "
-        val = (page * NumInOnePage, NumInOnePage + 1,)
+        val = (
+            page * NumInOnePage,
+            NumInOnePage + 1,
+        )
 
         result = db.checkAllData(sql, val)
         return result
@@ -102,37 +112,59 @@ class db:
 
     def register(username, email, psw):
         sql = "insert into member (username, email, password) values (%s, %s, %s)"
-        val = (username, email, psw,)
+        val = (
+            username,
+            email,
+            psw,
+        )
 
         result = db.writeData(sql, val)
         return result
 
     def check_booking(id):
-        sql = "select attractions.id, attractions.name, attractions.address, imgURL.images, booking.date, booking.time, booking.price, booking.booking_id "\
-            "from booking "\
-            "inner join attractions "\
-            "on attractions.id = booking.attraction_id "\
-            "inner join member "\
-            "on member.member_id = booking.member_id "\
-            "inner join imgURL "\
-            "on imgURL.id = attractions.id "\
-            "where member.member_id= %s and booking.confirmation=False "\
+        sql = (
+            "select attractions.id, attractions.name, attractions.address, imgURL.images, booking.date, booking.time, booking.price, booking.booking_id "
+            "from booking "
+            "inner join attractions "
+            "on attractions.id = booking.attraction_id "
+            "inner join member "
+            "on member.member_id = booking.member_id "
+            "inner join imgURL "
+            "on imgURL.id = attractions.id "
+            "where member.member_id= %s and booking.confirmation=False "
             "limit 1"
+        )
         val = (id,)
         result = db.checkAllData(sql, val)
         return result
 
     def build_booking(member_id, attraction_id, date, time, price):
-        sql = "insert into booking (member_id, attraction_id, date, time, price) "\
+        sql = (
+            "insert into booking (member_id, attraction_id, date, time, price) "
             "values (%s, %s, %s, %s, %s)"
-        val = (member_id, attraction_id, date, time, price,)
+        )
+        val = (
+            member_id,
+            attraction_id,
+            date,
+            time,
+            price,
+        )
         result = db.writeData(sql, val)
         return result
 
     def update_booking(member_id, attraction_id, date, time, price):
-        sql = "update booking set attraction_id=%s, date=%s, time=%s, price=%s "\
+        sql = (
+            "update booking set attraction_id=%s, date=%s, time=%s, price=%s "
             "where member_id =%s"
-        val = (attraction_id, date, time, price, member_id,)
+        )
+        val = (
+            attraction_id,
+            date,
+            time,
+            price,
+            member_id,
+        )
         result = db.writeData(sql, val)
         return result
 
@@ -149,11 +181,13 @@ class db:
         return result
 
     def record_order(payment_response, booking_id, phone):
-        sql = "insert into orders (booking_id, order_num, "\
-            "transaction_status, transaction_msg, rec_trade_id, "\
-            "bank_transaction_id, bank_result_code, bank_result_msg, "\
-            "card_last_four, amount, currency, phone) "\
+        sql = (
+            "insert into orders (booking_id, order_num, "
+            "transaction_status, transaction_msg, rec_trade_id, "
+            "bank_transaction_id, bank_result_code, bank_result_msg, "
+            "card_last_four, amount, currency, phone) "
             "values(%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        )
         val = (
             booking_id,
             payment_response["order_number"],
@@ -166,46 +200,54 @@ class db:
             payment_response["card_info"]["last_four"],
             payment_response["amount"],
             payment_response["currency"],
-            phone)
+            phone,
+        )
         result = db.writeData(sql, val)
         return result
 
     def get_order_by_orderNum(orderNum):
-        sql = "select orders.order_num, booking.price, attractions.id, attractions.name, attractions.address, imgURL.images, booking.date, booking.time, member.username, member.email, orders.phone, orders.transaction_status "\
-            "from orders "\
-            "inner join booking "\
-            "on orders.booking_id= booking.booking_id "\
-            "inner join attractions "\
-            "on booking.attraction_id=attractions.id "\
-            "inner join imgURL "\
-            "on imgURL.id = attractions.id "\
-            "inner join member "\
-            "on member.member_id=booking.member_id "\
-            "where orders.order_num=%s "\
+        sql = (
+            "select orders.order_num, booking.price, attractions.id, attractions.name, attractions.address, imgURL.images, booking.date, booking.time, member.username, member.email, orders.phone, orders.transaction_status "
+            "from orders "
+            "inner join booking "
+            "on orders.booking_id= booking.booking_id "
+            "inner join attractions "
+            "on booking.attraction_id=attractions.id "
+            "inner join imgURL "
+            "on imgURL.id = attractions.id "
+            "inner join member "
+            "on member.member_id=booking.member_id "
+            "where orders.order_num=%s "
             "limit 1"
+        )
         val = (orderNum,)
         result = db.checkAllData(sql, val)
         return result
 
     def get_member_order(member_id):
-        sql = "select DATE_FORMAT(booking.date, '%Y-%m-%d') as date, booking.time, "\
-            "booking.price, booking.booking_id, attractions.id, attractions.name, "\
-            "attractions.address, imgURL.images, orders.order_num "\
-            "from booking "\
-            "inner join orders "\
-            "on orders.booking_id = booking.booking_id "\
-            "inner join attractions "\
-            "on booking.attraction_id=attractions.id "\
-            "inner join imgURL "\
-            "on imgURL.url_id=(select url_id from imgURL where id=attractions.id limit 1) "\
+        sql = (
+            "select DATE_FORMAT(booking.date, '%Y-%m-%d') as date, booking.time, "
+            "booking.price, booking.booking_id, attractions.id, attractions.name, "
+            "attractions.address, imgURL.images, orders.order_num "
+            "from booking "
+            "inner join orders "
+            "on orders.booking_id = booking.booking_id "
+            "inner join attractions "
+            "on booking.attraction_id=attractions.id "
+            "inner join imgURL "
+            "on imgURL.url_id=(select url_id from imgURL where id=attractions.id limit 1) "
             "where member_id=%s"
+        )
         val = (member_id,)
         result = db.checkAllData(sql, val)
         return result
 
     def delete_order(order_num, member_id):
         sql = "delete booking, orders from orders inner join booking on booking.booking_id=orders.booking_id and booking.member_id=%s where orders.order_num=%s"
-        val = (member_id, order_num,)
+        val = (
+            member_id,
+            order_num,
+        )
         result = db.writeData(sql, val)
         return result
 
@@ -219,17 +261,26 @@ class db:
     def update_member(member_id, username, email, password):
         if username:
             sql = "update member set username=%s where member_id=%s"
-            val = (username, member_id,)
+            val = (
+                username,
+                member_id,
+            )
             result = db.writeData(sql, val)
             return result
         elif email:
             sql = "update member set email=%s where member_id=%s"
-            val = (email, member_id,)
+            val = (
+                email,
+                member_id,
+            )
             result = db.writeData(sql, val)
             return result
         elif password:
             sql = "update member set password=%s where member_id=%s"
-            val = (password, member_id,)
+            val = (
+                password,
+                member_id,
+            )
             result = db.writeData(sql, val)
             return result
 
@@ -238,7 +289,10 @@ class db:
             sql = "update userPic set pic_path=%s where member_id=%s"
         else:
             sql = "insert into userPic (pic_path, member_id) values (%s, %s)"
-        val = (file_path, member_id,)
+        val = (
+            file_path,
+            member_id,
+        )
         result = db.writeData(sql, val)
         return result
 
