@@ -15,7 +15,7 @@ app.register_blueprint(route.booking_api, url_prefix="/")
 app.register_blueprint(route.order_api, url_prefix="/")
 app.register_blueprint(route.member_api, url_prefix="/")
 app.register_blueprint(liff.views.liff_blueprint, url_prefix="/liff/")
-app.register_blueprint(liff.routes.liff_app_api, url_prefix="/liff/")
+app.register_blueprint(liff.routes.liff_app_api, url_prefix="/liff/app")
 
 
 # Pages

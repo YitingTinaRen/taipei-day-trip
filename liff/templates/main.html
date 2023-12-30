@@ -10,24 +10,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
     <script>
         const liff_id = '{{ liff_id }}';
+        let isLoggedIn = false
         $(document).ready(function () {
             liff.init({
                 liffId: liff_id
+            }).then(() => {
+                // Check if the user is logged in after initialization
+                isLoggedIn = liff.isLoggedIn();
+                console.log('Is user logged in:', isLoggedIn);
+            }).catch((err) => {
+                console.error('LIFF initialization failed', err);
             });
         });
     </script>
-    <script src="static/js/liff.js"></script>
+    <script src="static/js/index.js"></script>
     <title>Index</title>
 </head>
 
 <body>
     <div class="header">請假預約</div>
-    <div class="button-left">請假</div>
+    <div class="button-left" onclick="call_off()">請假</div>
     <div class="button-right">換班</div>
     <div class="button-left">加班</div>
     <div class="button-right">約會</div>
     <div class="button-left">數據</div>
     <div class="button-right" onclick="liff_closeWindow()">關閉視窗</div>
+    <div class="button-left" onclick="liff_logout()">登出</div>
 </body>
 
 </html>
