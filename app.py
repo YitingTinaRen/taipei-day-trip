@@ -1,13 +1,16 @@
-from flask import *
+from flask import Flask, render_template
 from flask_cors import CORS
-import route
 import config
-import liff
+from flask_sqlalchemy import SQLAlchemy
 
 app = None
 
 app = Flask(__name__)
 app.config.from_object(config)
+db = SQLAlchemy(app)
+import liff
+import route
+
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 app.register_blueprint(route.attraction_api, url_prefix="/")
 app.register_blueprint(route.account_api, url_prefix="/")

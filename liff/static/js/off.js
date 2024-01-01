@@ -28,18 +28,17 @@ liff.ready.then(() => {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(formDataObject),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log("Success:", data);
-                // Handle success response
-                window.location.href = "https://aebb-118-170-5-165.ngrok-free.app/liff/summary";
+        }).then(
+            response => response.json()
+        ).then(data => {
+            console.log("Success:", data);
+            // Handle success response
+            window.location.href = "https://aebb-118-170-5-165.ngrok-free.app/liff/summary";
 
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                // Handle error
-            });
+        }).catch(error => {
+            console.error("Error:", error);
+            // Handle error
+        });
     });
 });
 

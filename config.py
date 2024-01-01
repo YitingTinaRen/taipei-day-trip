@@ -10,6 +10,7 @@ DB_HOST = os.getenv("DB_HOST")
 DB_DB = os.getenv("DB_DB")
 DB_POOL_NAME = os.getenv("DB_POOL_NAME")
 DB_POOL_SIZE = 10
+SQLALCHEMY_DATABASE_URI = os.getenv("SQLALCHEMY_DATABASE_URI")
 
 # Flask app configuration
 DEBUG = os.getenv("DEBUG")

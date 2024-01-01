@@ -1,4 +1,4 @@
-from enum import IntEnum
+from enum import IntEnum, StrEnum
 
 
 class AttendanceType(IntEnum):
@@ -8,7 +8,7 @@ class AttendanceType(IntEnum):
     parent_leave = 4
 
 
-class LeaveType(IntEnum):
-    annual = 1
-    sick = 2
-    personal = 3
+class LeaveType(StrEnum):
+    annual = "annual"
+    sick = "sick"
+    personal = "personal"
