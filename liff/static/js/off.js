@@ -33,7 +33,7 @@ liff.ready.then(() => {
         ).then(data => {
             console.log("Success:", data);
             // Handle success response
-            window.location.href = "https://aebb-118-170-5-165.ngrok-free.app/liff/summary";
+            window.location.href = "https://5672-118-170-42-151.ngrok-free.app/liff/summary";
 
         }).catch(error => {
             console.error("Error:", error);

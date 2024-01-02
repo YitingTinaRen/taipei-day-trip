@@ -8,11 +8,11 @@ function call_off() {
         alert("未登入LINE");
         liff.login({
             // redirectUri: "https://starfruit8106.synology.me:3001/liff/index",
-            redirectUri: "https://aebb-118-170-5-165.ngrok-free.app/liff/index",
+            redirectUri: "https://5672-118-170-42-151.ngrok-free.app/liff/index",
         });
     } else {
         alert("已登入LINE");
-        window.location.href = "https://aebb-118-170-5-165.ngrok-free.app/liff/call-off";
+        window.location.href = "https://5672-118-170-42-151.ngrok-free.app/liff/call-off";
     }
 }
 

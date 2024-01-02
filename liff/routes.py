@@ -12,9 +12,11 @@ from linebot.v3.messaging import (
     TextMessage,
 )
 from linebot.v3.webhooks import MessageEvent, TextMessageContent
-from liff.db.command import db
+
+# from liff.db.command import db
 from liff.db.models import User, NannyAttandence
 from liff.db.choices import LeaveType, AttendanceType
+from app import db
 
 
 configuration = Configuration(access_token=config.LINE_CHANNEL_ACCESS_TOKEN)
@@ -49,12 +51,6 @@ def call_off():
     user_id = response["userId"]
     display_name = response["displayName"]
 
-    # check if the user exists
-    # sql = """select * from user where line_user_id = %(user_id)s;"""
-    # params = {"user_id": user_id}
-    coonection = db()
-    # user = coonection.checkOneData(sql, params)
-    # row_id = user["id"]
     user = User.query.filter_by(line_user_id=user_id).first_or_404()
     row_id = user.id
     if not user:
@@ -72,20 +68,6 @@ def call_off():
     time_difference = (end_time - start_time).total_seconds() / 60 / 60
     # round off floating digits to the nearest 0.5
     round_off_hours = round(time_difference * 2) / 2
-    # sql = """
-    # insert into nanny_attandence (source_id, source_type, is_valid, start_date, end_date, off_hours, creator, last_modifier)
-    # values(%(source_id)s, %(source_type)s, %(is_valid)s, %(start_date)s, %(end_date)s, %(off_hours)s, %(creator)s, %(creator)s);
-    # """
-    # params = {
-    #     "source_id": AttendanceType.leave.value,
-    #     "source_type": LeaveType[leave_type].value,
-    #     "is_valid": True,
-    #     "start_date": start_time,
-    #     "end_date": end_time,
-    #     "off_hours": round_off_hours,
-    #     "creator": row_id,
-    # }
-    # row_id = coonection.writeData(sql, params)
     new_record = NannyAttandence(
         source_id=AttendanceType.leave.value,
         source_type=LeaveType[leave_type].value,
@@ -94,7 +76,9 @@ def call_off():
         end_date=end_time,
         off_hours=round_off_hours,
         creator=row_id,
-        last_modifier=row_id,
+        last_modifier=row_id
+        # create_date=datetime.now(),
+        # last_modified_date=datetime.now(),
     )
     db.session.add(new_record)
     db.session.commit()

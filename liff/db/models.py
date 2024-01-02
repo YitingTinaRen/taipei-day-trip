@@ -1,3 +1,4 @@
+from datetime import datetime
 from app import db
 
 
@@ -13,8 +14,8 @@ class NannyAttandence(db.Model):
     note = db.Column(db.String(256), nullable=True)
     creator = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
     last_modifier = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    create_date = db.Column(db.DateTime, nullable=False)
-    last_modified_date = db.Column(db.DateTime, nullable=False)
+    create_date = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    last_modified_date = db.Column(db.DateTime, default=datetime.now(), nullable=False)
 
     # Explicitly specify foreign keys for the relationships
     associated_creator = db.relationship(
@@ -38,23 +39,8 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True, nullable=False)
     line_user_id = db.Column(db.String(255), unique=True, nullable=False)
     is_active = db.Column(db.Boolean, nullable=False)
-    create_date = db.Column(db.DateTime, nullable=False)
-    last_modified_date = db.Column(db.DateTime, nullable=False)
-    # Define backref for nanny_attandence_creator relationship
-    # Define backref for the relationship with NannyAttandence
-    nanny_attandence_creator = db.relationship(
-        "NannyAttandence",
-        foreign_keys=[NannyAttandence.creator],
-        backref="creator_user",
-        lazy=True,
-    )
-
-    nanny_attandence_last_modifier = db.relationship(
-        "NannyAttandence",
-        foreign_keys=[NannyAttandence.last_modifier],
-        backref="last_modifier_user",
-        lazy=True,
-    )
+    create_date = db.Column(db.DateTime, default=datetime.now(), nullable=False)
+    last_modified_date = db.Column(db.DateTime, default=datetime.now(), nullable=False)
 
     def __repr__(self):
         return "<User %r>" % self.id
