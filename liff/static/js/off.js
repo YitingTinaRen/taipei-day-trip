@@ -19,7 +19,7 @@ liff.ready.then(() => {
         formData.forEach((value, key) => {
             formDataObject[key] = value;
         });
-        formDataObject.token = liff.getAccessToken();
+        formDataObject.idToken = liff.getIDToken();
 
         // Send POST request
         fetch("/liff/app/call-off", {

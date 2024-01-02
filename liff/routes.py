@@ -20,7 +20,7 @@ from app import db
 
 
 configuration = Configuration(access_token=config.LINE_CHANNEL_ACCESS_TOKEN)
-handler = WebhookHandler(config.LIFF_CHANEL_SECRET)
+handler = WebhookHandler(config.LIFF_CHANNEL_SECRET)
 
 
 liff_app_api = Blueprint("liff_app_api", __name__)
@@ -33,9 +33,9 @@ def call_off():
     start_time = datetime.fromisoformat(data["start_time"])
     end_time = datetime.fromisoformat(data["end_time"])
     leave_type = data["leave_type"]
-    token = data["token"]
+    token = data["idToken"]
     response = requests.get(
-        f"https://api.line.me/oauth2/v2.1/verify?access_token={token}"
+        f"https://api.line.me/oauth2/v2.1/verify?id_token={token}&client_id={config.LINE_CHANNEL_ID}"
     )
     response.raise_for_status()
     response = response.json()
