@@ -32,7 +32,13 @@ def summary():
 		WHEN source_id = 4 THEN '家長請假'
 		ELSE NULL
 		END AS source_id,
-        source_type,
+        CASE
+        WHEN source_type = 'annual THEN '特休'
+        WHEN source_type = 'sick' THEN '病假'
+        WHEN source_type = 'personal' THEN '事假'
+        WHEN source_type = 'rest' THEN '休息'
+        ELSE NULL
+        END AS source_type,
 		start_date, end_date, off_hours, 
         IF(note is null, '', note) AS note
     from nanny_attandence

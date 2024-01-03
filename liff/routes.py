@@ -34,30 +34,24 @@ def call_off():
     end_time = datetime.fromisoformat(data["end_time"])
     leave_type = data["leave_type"]
     token = data["idToken"]
-    response = requests.get(
+    response = requests.post(
         f"https://api.line.me/oauth2/v2.1/verify?id_token={token}&client_id={config.LINE_CHANNEL_ID}"
     )
     response.raise_for_status()
     response = response.json()
-    if response["client_id"] != config.LINE_CHANEL_ID:
+    if response["aud"] != config.LINE_CHANNEL_ID:
         raise Exception("Invalid user token")
-    if response["expires_in"] <= 0:
-        raise Exception("Expired token")
 
-    headers = {"Authorization": f"Bearer {token}"}
-    response = requests.get("https://api.line.me/v2/profile", headers=headers)
-    response.raise_for_status()
-    response = response.json()
-    user_id = response["userId"]
-    display_name = response["displayName"]
+    user_id = response["sub"]
+    name = response["name"]
+    email = response["email"]
 
-    user = User.query.filter_by(line_user_id=user_id).first_or_404()
-    row_id = user.id
+    user = User.query.filter_by(line_user_id=user_id).first()
     if not user:
-        new_user = User(name="display_name", line_user_id=user_id)
-        db.session.add(new_user)
+        user = User(name=name, line_user_id=user_id, email=email, is_active=True)
+        db.session.add(user)
         db.session.commit()
-        row_id = new_user.id
+    row_id = user.id
 
     if None in (start_time, end_time, leave_type):
         raise Exception("start_time, end_time, leave_type cannot be null")
@@ -76,9 +70,7 @@ def call_off():
         end_date=end_time,
         off_hours=round_off_hours,
         creator=row_id,
-        last_modifier=row_id
-        # create_date=datetime.now(),
-        # last_modified_date=datetime.now(),
+        last_modifier=row_id,
     )
     db.session.add(new_record)
     db.session.commit()
