@@ -2,6 +2,7 @@ from flask import Blueprint, render_template
 import config
 from flask import request
 from liff.db.command import db
+from flask_login import login_required
 
 
 liff_blueprint = Blueprint(
@@ -22,6 +23,7 @@ def off():
 
 
 @liff_blueprint.route("/summary")
+@login_required
 def summary():
     sql = """
     select 	id, 
@@ -33,7 +35,7 @@ def summary():
 		ELSE NULL
 		END AS source_id,
         CASE
-        WHEN source_type = 'annual THEN '特休'
+        WHEN source_type = 'annual' THEN '特休'
         WHEN source_type = 'sick' THEN '病假'
         WHEN source_type = 'personal' THEN '事假'
         WHEN source_type = 'rest' THEN '休息'

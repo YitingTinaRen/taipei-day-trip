@@ -2,12 +2,16 @@ from flask import Flask, render_template
 from flask_cors import CORS
 import config
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+
+login_manager = LoginManager()
 
 app = None
 
 app = Flask(__name__)
 app.config.from_object(config)
 db = SQLAlchemy(app)
+login_manager.init_app(app)
 import liff
 import route
 

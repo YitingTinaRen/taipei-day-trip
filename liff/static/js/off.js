@@ -19,7 +19,6 @@ liff.ready.then(() => {
         formData.forEach((value, key) => {
             formDataObject[key] = value;
         });
-        formDataObject.idToken = liff.getIDToken();
 
         // Send POST request
         fetch("/liff/app/call-off", {
@@ -33,7 +32,7 @@ liff.ready.then(() => {
         ).then(data => {
             console.log("Success:", data);
             // Handle success response
-            window.location.href = "https://5672-118-170-42-151.ngrok-free.app/liff/summary";
+            window.location.href = clientHost + "/liff/summary";
 
         }).catch(error => {
             console.error("Error:", error);

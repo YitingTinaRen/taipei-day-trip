@@ -4,20 +4,27 @@ function liff_closeWindow() {
 }
 
 function call_off() {
-    if (isLoggedIn != true) {
+    if (isLoggedIn == false) {
         alert("未登入LINE");
         liff.login({
             // redirectUri: "https://starfruit8106.synology.me:3001/liff/index",
-            redirectUri: "https://5672-118-170-42-151.ngrok-free.app/liff/index",
+            redirectUri: clientHost + "/liff/index",
         });
     } else {
-        alert("已登入LINE");
-        window.location.href = "https://5672-118-170-42-151.ngrok-free.app/liff/call-off";
+        window.location.href = clientHost + "/liff/call-off";
     }
 }
 
 function liff_logout() {
-    liff.logout()
-    isLoggedIn = false;
-    console.log('User logged out');
+    fetch("/liff/app/logout", {
+        method: "PUT",
+    }).then(
+        response => response.json()
+    ).then(data => {
+        console.log("Success:", data);
+        liff.logout()
+        isLoggedIn = false;
+    }).catch(error => {
+        console.error("Error:", error);
+    });
 }

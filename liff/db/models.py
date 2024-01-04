@@ -44,3 +44,21 @@ class User(db.Model):
 
     def __repr__(self):
         return "<User %r>" % self.id
+
+    # @property
+    # def is_active(self):
+    #     return self.is_active
+
+    @property
+    def is_authenticated(self):
+        return self.is_active
+
+    @property
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        try:
+            return str(self.line_user_id)
+        except AttributeError:
+            raise NotImplementedError("No `id` attribute - override `get_id`") from None
