@@ -14,7 +14,10 @@ liff_blueprint = Blueprint(
 
 @liff_blueprint.route("/index")
 def index():
-    return render_template("main.html", liff_id=config.LIFF_ID)
+    # return render_template("main.html", liff_id=config.LIFF_ID)
+    return render_template(
+        "liff_index.html", liff_id=config.LIFF_ID, host=config.CLIENT_HOST
+    )
 
 
 @liff_blueprint.route("/call-off")

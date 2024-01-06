@@ -21,6 +21,9 @@ JSON_AS_ASCII = False
 TEMPLATES_AUTO_RELOAD = True
 JASONIFY_MIMETYPE = "application/json;charset=utf-8"
 JSON_PRETTYPRINT_REGULAR = "True"
+CLIENT_HOST = os.getenv("CLIENT_HOST")
+LOCAL_HOST = os.getenv("LOCAL_HOST")
+
 
 # jwt algorithm
 JWT_ALGO = os.getenv("JWT_ALGO")

@@ -1,9 +1,27 @@
-body {
+/* body {
     font-family: Arial, sans-serif;
     text-align: center;
     margin: 20px;
     font-weight: 400;
     font-size: 20px;
+} */
+
+.button {
+    display: inline-block;
+    /* Change from block to inline-block */
+    width: 80%;
+    /* Adjusted width to fit two buttons in a row */
+    margin: 10px 2% 10px 8%;
+    /* top right bottom left */
+    /* Adjusted margin for spacing between buttons */
+    padding: 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    text-align: center;
 }
 
 .button-left {
@@ -38,7 +56,7 @@ body {
     cursor: pointer;
 }
 
-.header {
+/* .header {
     display: block;
     width: 80%;
     margin: 10px auto;
@@ -47,22 +65,22 @@ body {
     font-weight: 600;
     color: #4CAF50;
     border: none;
-}
+} */
 
 @media (max-width: 600px) {
 
-    .button-left,
+    /* .button-left,
     .button-right {
         width: 30%;
-    }
+    } */
 }
 
 @media (max-width: 370px) {
 
-    .button-left,
+    /* .button-left,
     .button-right {
         display: block;
         width: 80%;
         margin: 10px auto;
-    }
+    } */
 }

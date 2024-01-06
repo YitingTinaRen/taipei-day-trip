@@ -28,6 +28,16 @@ liff_app_api = Blueprint("liff_app_api", __name__)
 
 
 # /liff/app/login
+@liff_app_api.route("/liff-id", methods=["GET"])
+def liff_id():
+    host = request.host
+    if host == config.CLIENT_HOST[8:]:
+        return jsonify(config.LIFF_ID), 200
+    else:
+        return jsonify("error"), 400
+
+
+# /liff/app/login
 @liff_app_api.route("/login", methods=["POST"])
 def login():
     if current_user.is_anonymous:

@@ -15,7 +15,9 @@ login_manager.init_app(app)
 import liff
 import route
 
-cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
+cors = CORS(
+    app, resources={r"/api/*": {"origins": [config.CLIENT_HOST, config.LOCAL_HOST]}}
+)
 app.register_blueprint(route.attraction_api, url_prefix="/")
 app.register_blueprint(route.account_api, url_prefix="/")
 app.register_blueprint(route.booking_api, url_prefix="/")
